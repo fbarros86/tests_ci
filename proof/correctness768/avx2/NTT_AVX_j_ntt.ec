@@ -11,9 +11,20 @@ from JazzEC require import Array400 WArray800.
 require import NTT_AVX_Fq_basemul MLKEMFCLib.
 require import NTT_AVX_j.
 
-(*************)
-(** POLY_NTT *)
-(*************)
+from CryptoSpecs require import GFq Correctness768.
+
+require import Fq.
+import Zq.
+
+require import MLKEM_Poly.
+import MLKEM_Poly.
+
+
+require AVX2_Ops.
+require import Montgomery16.
+from JazzEC require import Jkem768_avx2 Jkem768.
+
+import IntOrder.
 
 (** Butterfly *)
 

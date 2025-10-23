@@ -10,6 +10,21 @@ from JazzEC require import Array400 WArray800.
 require import NTT_AVX_Fq_basemul MLKEMFCLib.
 require import NTT_AVX_j_ntt.
 
+from CryptoSpecs require import GFq Correctness768.
+
+require import Fq.
+import Zq.
+
+require import MLKEM_Poly.
+import MLKEM_Poly.
+
+
+require AVX2_Ops.
+require import Montgomery16.
+from JazzEC require import Jkem768_avx2 Jkem768.
+
+import IntOrder.
+
 lemma wmulhsC x y: W16.wmulhs x y = W16.wmulhs y x by smt().
 
 lemma invbutterfly_r (n1 n2:int) xl xr z rxl rxr rzM rzMqinv rq:
