@@ -15,6 +15,7 @@ import VecMat768 Serialization768.
 import MLKEM_PolyVec.
 import Zq IntOrder BitReverse.
 import PolyVec PolyMat.
+
 theory NTT_Avx2.
 
 abbrev nttpack_idx = Array256.of_list witness
