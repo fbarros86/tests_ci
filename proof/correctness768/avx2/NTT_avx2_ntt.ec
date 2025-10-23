@@ -29,19 +29,19 @@ qed.
 
 phoare poly_basemul_avx2_ph _a _b:
  [Jkem768_avx2.M._poly_basemul:
-    (lift_array256 ap) = nttunpack _a /\ signed_bound_cxq ap 0 256 2
-    /\ (lift_array256 bp) = nttunpack _b /\ signed_bound_cxq bp 0 256 2
+    (lift_array256 ap) = NTT_Avx2.nttunpack _a /\ signed_bound_cxq ap 0 256 2
+    /\ (lift_array256 bp) = NTT_Avx2.nttunpack _b /\ signed_bound_cxq bp 0 256 2
    ==>
     (lift_array256 res)
-    = nttunpack (scale (basemul (_a) (_b)) (incoeff 169))
+    = NTT_Avx2.nttunpack (scale (basemul (_a) (_b)) (incoeff 169))
     /\ signed_bound_cxq res 0 256 1 ] = 1%r.
 proof. 
-conseq poly_basemul_avx2_eq (__basemul_ph (nttunpack _a) (nttunpack _b)) => //.
+conseq poly_basemul_avx2_eq (__basemul_ph (NTT_Avx2.nttunpack _a) (NTT_Avx2.nttunpack _b)) => //.
  move => /> &1 *.
  by exists ((lift_array256 rp{1}), (lift_array256 ap{1}), (lift_array256 bp{1})) => //=.
 move=> /> &m <- Hb.
-move: (basemul_avx2E (nttunpack _a) (nttunpack _b)).
-rewrite !perm_ntt_nttpackE !nttunpackK => <-.
+move: (basemul_avx2E (NTT_Avx2.nttunpack _a) (NTT_Avx2.nttunpack _b)).
+rewrite !perm_ntt_nttpackE !NTT_Avx2.nttunpackK => <-.
 by rewrite /scale -map_pack NTT_Avx2.nttpackK.
 qed.
 
@@ -81,7 +81,7 @@ move => [#] H7 H8 r1 H9 H10. do split.
   rewrite mapvE !offunvE //= KMatrix.Vector.offunvK /vclamp kb /=.
   rewrite /lift_array256 /subarray256 tP => i ib.
   rewrite mapiE //= initiE //= /NTT_Avx2.nttpackv initiE //= 1:/#.
-  move :nttunpack_bnd NTT_Avx2.nttpack_bnd; rewrite !allP => pb upb.
+  move :NTT_Avx2.nttunpack_bnd NTT_Avx2.nttpack_bnd; rewrite !allP => pb upb.
   case(k = 0).
    + move => ->. rewrite ifT //= /NTT_Avx2.nttpack /subarray256 initiE //=. 
      pose a:=NTT_Avx2.nttpack_idx.[i].
