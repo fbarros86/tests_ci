@@ -7,7 +7,7 @@ from JazzEC require import WArray512.
 from JazzEC require import Array400 WArray800.
 
 
-require import NTT_AVX_Fq_ntt MLKEMFCLib.
+require import NTT_AVX_Fq_basemul MLKEMFCLib.
 
 (******* *)
 
