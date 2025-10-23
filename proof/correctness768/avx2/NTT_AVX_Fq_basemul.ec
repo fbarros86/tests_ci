@@ -1,4 +1,5 @@
 require import AllCore List IntDiv Ring StdOrder BitEncoding.
+requite import NTT_AVX_Fq.
 
 require import Fq NTT_Fq NTTAlgebra.
 
