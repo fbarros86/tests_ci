@@ -35,7 +35,7 @@ by move=> ->; rewrite !initiE.
 qed.
 
 lemma ntt_avx_0_pr r:
-  phoare [NTT_AVX_Fq.__ntt_level0 : rp = r ==> res = r_avx2_ntt NTT_Fq.zetas r 0] = 1%r.
+  phoare [NTT_AVX.__ntt_level0 : rp = r ==> res = r_avx2_ntt NTT_Fq.zetas r 0] = 1%r.
 proof. conseq ntt_avx_0_ll (ntt_avx_0 r) => />. qed.
 
 hoare ntt_avx_1 r:
