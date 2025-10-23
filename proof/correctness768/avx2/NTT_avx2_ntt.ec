@@ -1,4 +1,4 @@
-import NTT_avx2
+require import NTT_avx2.
 
 from JazzEC require import Jkem768_avx2 Jkem768.
 require import NTT_AVX_Fq_ntt NTT_AVX_j_invtt.

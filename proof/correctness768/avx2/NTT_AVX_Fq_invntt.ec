@@ -1,4 +1,4 @@
-import NTT_AVX_Fq_ntt.
+require import NTT_AVX_Fq_ntt.
 
 lemma invntt_avx_0_ll : islossless NTT_AVX.__invntt_level0 by islossless.
 lemma invntt_avx_1_ll : islossless NTT_AVX.__invntt_level1 by islossless.

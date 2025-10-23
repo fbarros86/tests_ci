@@ -1,4 +1,4 @@
-import NTT_AVX_Fq_basemul.
+require import NTT_AVX_Fq_basemul.
 
 
 lemma ntt_avx_0_ll : islossless NTT_AVX.__ntt_level0 by islossless.

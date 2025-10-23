@@ -1,4 +1,4 @@
-import NTT_AVX_j.ec
+require import NTT_AVX_j.
 
 (*************)
 (** POLY_NTT *)

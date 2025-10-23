@@ -1,4 +1,4 @@
-import NTT_avx2_ntt
+require import NTT_avx2_ntt.
 
 lemma poly_invntt_avx2_corr _r :
   phoare [Jkem768_avx2.M._poly_invntt :

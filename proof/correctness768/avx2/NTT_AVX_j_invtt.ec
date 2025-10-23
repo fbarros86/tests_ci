@@ -1,4 +1,4 @@
-import NTT_AVX_j_ntt
+require import NTT_AVX_j_ntt.
 
 lemma wmulhsC x y: W16.wmulhs x y = W16.wmulhs y x by smt().
 

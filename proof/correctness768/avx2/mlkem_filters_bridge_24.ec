@@ -1,4 +1,4 @@
-import Mlkem_filters_bridge_48
+require import Mlkem_filters_bridge_48.
 
 from JazzEC require import Array16.
 
