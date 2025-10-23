@@ -81,3 +81,34 @@ export fn test_while2() -> reg u64 {
     return x;
 }
 
+export fn bug_1214(reg ptr u8[4] p) -> reg ptr u8[4] {
+  reg ptr u32[1] q = p;
+  reg u32 v = 42;
+  q[0] = v;
+  return p;
+}
+
+
+export fn explicit_copy() -> reg u64 {
+  reg u64[1] r;
+  stack u64[1] s;
+  reg ptr u64[1] p = s;
+  r[0] = 0;
+  p = #copy(r);
+  s = p;
+  reg u64 a = s[0];
+  return a;
+}
+
+export fn load(reg ptr u32[1] a) {
+  stack u32[1] q;
+  reg ptr u32[1] p = q;
+  p = #copy_32(a);
+}
+
+fn implicit_flag_name() -> reg bool {
+  reg bool b _cf_;
+  _cf_ = true; // must warn
+  ?{zf = b}, _ = #set0(); // must not warn
+  return b;
+}

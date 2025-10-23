@@ -40,6 +40,7 @@ Variant x86_op : Type :=
 
 | LZCNT  of wsize             (* number of leading zero *)
 | TZCNT  of wsize             (* number of trailing zero *)
+| BSR    of wsize             (* bit scan reverse *)
 
   (* Flag *)
 | SETcc                           (* Set byte on condition *)
@@ -94,6 +95,7 @@ Variant x86_op : Type :=
   (* MMX instructions *)
 | MOVX  of wsize
 | POR
+| PADD of velem & wsize (* parallel addition *)
 
   (* SSE instructions *)
 | MOVD     of wsize (* MOVD/MOVQ to wide registers *)
@@ -130,7 +132,6 @@ Variant x86_op : Type :=
 | VPSHUFHW `(wsize)
 | VPSHUFLW `(wsize)
 | VPBLEND  `(velem) `(wsize)
-| VPBLENDVB `(wsize) (* Deprecated: use BLENDV instead *)
 | BLENDV of velem & wsize (* vpblendvb, vblendvps, vblendvpd *)
 | VPACKUS  `(velem) `(wsize)
 | VPACKSS  `(velem) `(wsize)
@@ -352,6 +353,8 @@ Definition primV_16 := primV_range [seq PVv VE16 sz | sz <- [:: U128; U256 ]].
 Definition primV_16_32 := primV_range [seq PVv ve sz | ve <- [:: VE16; VE32 ], sz <- [:: U128; U256 ]].
 Definition primV_16_64 := primV_range [seq PVv ve sz | ve <- [:: VE16; VE32; VE64 ], sz <- [:: U128; U256 ]].
 Definition primV_128 := primV_range [seq PVv ve U128 | ve <- [:: VE8; VE16; VE32; VE64 ]].
+
+Definition primMMX := primV_range [seq PVv ve sz | ve <- [:: VE8; VE16; VE32; VE64 ], sz <- [:: U64; U128 ]].
 
 Definition primSV_8_32 (f: signedness → velem → wsize → x86_op) : prim_constructor x86_op :=
   PrimX86
@@ -641,6 +644,15 @@ Definition Ox86_POR_instr :=
   in
   (desc, ("POR"%string, primM POR)).
 
+Definition check_padd : i_args_kinds := [:: [:: rx; rxm true ]; [:: xmm; xmmm true ] ].
+
+Definition Ox86_PADD_instr :=
+  let padd := "PADD"%string in
+  (λ (ve: velem) (sz: wsize),
+    mk_instr_safe (pp_ve_sz padd ve sz) (w2_ty sz sz) (w_ty sz) [:: Eu 0; Eu 1 ] [:: Eu 0 ] MSB_CLEAR
+      (lift2_vec ve +%R sz) check_padd 2 (size_64_128 sz) (pp_viname "padd" ve sz),
+   (padd, primMMX PADD)).
+
 Definition check_movsx (_ _:wsize) := [:: r_rm ].
 
 Definition pp_movsx szs szd args :=
@@ -914,6 +926,29 @@ Definition x86_TZCNT sz (w: word sz) : tpl (b5w_ty sz) :=
 Definition Ox86_TZCNT_instr               :=
   mk_instr_w_b5w "TZCNT" x86_TZCNT [:: Eu 1] [:: Eu 0] 2 (fun _ => [::r_rm]) (prim_16_64 TZCNT) size_16_64 (pp_iname "tzcnt").
 
+Definition x86_BSR sz (w: word sz) : ex_tpl (b5w_ty sz) :=
+  Let _ := assert (w != 0%R) ErrArith in
+  ok (flags_w ((:: None, None, None, None & Some false) : sem_tuple b5_ty) (wrepr sz (wsize_bits sz - 1) - leading_zero w)%R).
+
+Lemma x86_BSR_errty sz :
+  size_16_64 sz → sem_forall (λ r : result error (sem_tuple (b5w_ty sz)), r ≠ Error ErrType) [:: sword sz] (x86_BSR (sz:=sz)).
+Proof. by rewrite /x86_BSR => _ x /=; case: eqP. Qed.
+
+Lemma x86_BSR_safe sz :
+  size_16_64 sz → @values.interp_safe_cond_ty [:: sword sz ] _ [:: NotZero sz 0] (@x86_BSR sz).
+Proof.
+  rewrite /x86_BSR => _ x /List_Forall_inv /=[] x_nz _.
+  move: (x_nz x); rewrite truncate_word_u => /(_ erefl).
+  case: eqP; first by move => ->.
+  move => _ _; eexists; reflexivity.
+Qed.
+
+Definition Ox86_BSR_instr :=
+  (fun sz =>
+     mk_instr (pp_sz "BSR" sz) [:: sword sz ] (b5w_ty sz) [:: Eu 1 ] (implicit_flags ++ [:: Ea 0 ]) MSB_CLEAR
+       (@x86_BSR sz) [:: r_rm ] 2 [:: NotZero sz 0 ] (size_16_64 sz) (pp_iname "bsr" sz)
+       erefl (@x86_BSR_errty sz) (@x86_BSR_safe sz),
+     ("BSR"%string, prim_16_64 BSR)).
 
 Definition check_setcc := [:: [::c; rm false]].
 
@@ -1559,17 +1594,6 @@ Definition Ox86_VPBLEND_instr :=
 
 Definition check_xmm_xmm_xmmm_xmm (_:wsize) := [:: [:: xmm; xmm; xmmm true; xmm]].
 
-(* TODO: remove in 2025.AA.0 *)
-Definition x86_VPBLENDVB sz (x y m: word sz) : tpl (w_ty sz) :=
-  wpblendvb x y m.
-
-(* TODO: remove in 2025.AA.0 *)
-Definition Ox86_VPBLENDVB_instr :=
-  (fun sz => mk_instr_safe
-               (pp_sz "VPBLENDVB" sz) (w3_ty sz) (w_ty sz) [:: Eu 1; Eu 2; Eu 3] [:: Eu 0] MSB_CLEAR
-               (@x86_VPBLENDVB sz) (check_xmm_xmm_xmmm_xmm sz) 4 (size_128_256 sz)
-               (pp_name "vpblendvb" sz), ("VPBLENDVB"%string, prim_128_256 VPBLENDVB)).
-
 Definition x86_BLENDV ve sz (x y m: word sz) : tpl (w_ty sz) :=
   blendv ve x y m.
 
@@ -1743,14 +1767,14 @@ Definition Ox86_PMOVMSKB_instr :=
 
 Definition Ox86_MOVEMASK_instr :=
   (fun (ve: velem) sz =>
-     mk_instr_safe (pp_ve_sz "MOVEMASK" ve sz) (w_ty sz) (w_ty U64) [:: Eu 1 ] [:: Eu 0 ] MSB_CLEAR
+     mk_instr_safe (pp_ve_sz "MOVEMASK" ve sz) (w_ty sz) (w_ty U32) [:: Eu 1 ] [:: Eu 0 ] MSB_CLEAR
        (@movemask ve sz) [:: [:: r ; xmm ] ] 2 (((ve : wsize) \in [:: U8; U32; U64 ]) && size_128_256 sz)
        (pp_name_ty match ve with
           | VE8 => "vpmovmskb"
           | VE32 => "vmovmskps"
           | VE64 => "vmovmskpd"
           | _ => "<assert false>"
-          end [:: U64; sz ]),
+          end [:: U32; sz ]),
      ("MOVEMASK"%string, primV_range [seq PVv ve sz | ve <- [:: VE8; VE32; VE64 ], sz <- [:: U128; U256 ]] MOVEMASK)
   ).
 
@@ -2149,6 +2173,7 @@ Definition x86_instr_desc o : instr_desc_t :=
   | DEC sz             => Ox86_DEC_instr.1 sz
   | LZCNT sz           => Ox86_LZCNT_instr.1 sz
   | TZCNT sz           => Ox86_TZCNT_instr.1 sz
+  | BSR sz             => Ox86_BSR_instr.1 sz
   | SETcc              => Ox86_SETcc_instr.1
   | BT sz              => Ox86_BT_instr.1 sz
   | CLC                => Ox86_CLC_instr.1
@@ -2177,6 +2202,7 @@ Definition x86_instr_desc o : instr_desc_t :=
   | SHLX sz            => Ox86_SHLX_instr.1 sz
   | MOVX sz            => Ox86_MOVX_instr.1 sz
   | POR                => Ox86_POR_instr.1
+  | PADD ve sz         => Ox86_PADD_instr.1 ve sz
   | MOVD sz            => Ox86_MOVD_instr.1 sz
   | MOVV sz            => Ox86_MOVV_instr.1 sz
   | VMOV sz            => Ox86_VMOV_instr.1 sz
@@ -2214,7 +2240,6 @@ Definition x86_instr_desc o : instr_desc_t :=
   | VPUNPCKH sz sz'    => Ox86_VPUNPCKH_instr.1 sz sz'
   | VPUNPCKL sz sz'    => Ox86_VPUNPCKL_instr.1 sz sz'
   | VPBLEND ve sz      => Ox86_VPBLEND_instr.1 ve sz
-  | VPBLENDVB sz       => Ox86_VPBLENDVB_instr.1 sz
   | BLENDV ve sz       => Ox86_BLENDV_instr.1 ve sz
   | VPACKUS ve sz      => Ox86_VPACKUS_instr.1 ve sz
   | VPACKSS ve sz      => Ox86_VPACKSS_instr.1 ve sz
@@ -2306,6 +2331,7 @@ Definition x86_prim_string :=
    Ox86_DEC_instr.2;
    Ox86_LZCNT_instr.2;
    Ox86_TZCNT_instr.2;
+   Ox86_BSR_instr.2;
    Ox86_SETcc_instr.2;
    Ox86_BT_instr.2;
    Ox86_CLC_instr.2;
@@ -2334,6 +2360,7 @@ Definition x86_prim_string :=
    Ox86_SHLX_instr.2;
    Ox86_MOVX_instr.2;
    Ox86_POR_instr.2;
+   Ox86_PADD_instr.2;
    Ox86_MOVD_instr.2;
    Ox86_MOVV_instr.2;
    Ox86_VMOV_instr.2;
@@ -2371,7 +2398,6 @@ Definition x86_prim_string :=
    Ox86_VPUNPCKH_instr.2;
    Ox86_VPUNPCKL_instr.2;
    Ox86_VPBLEND_instr.2;
-   Ox86_VPBLENDVB_instr.2;
    Ox86_BLENDV_instr.2;
    Ox86_VPACKUS_instr.2;
    Ox86_VPACKSS_instr.2;

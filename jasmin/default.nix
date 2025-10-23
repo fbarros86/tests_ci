@@ -59,6 +59,8 @@ let easycrypt = callPackage scripts/easycrypt.nix {
   };
 }; in
 
+let z3 = callPackage scripts/z3.nix {}; in
+
 let inherit (coqPackages.coq) ocamlPackages; in
 
 let oP =
@@ -87,7 +89,7 @@ stdenv.mkDerivation {
       coqPackages.mathcomp-algebra-tactics
       coqPackages.ITree
     ]
-    ++ optionals testDeps ([ git coqPackages.vscoq-language-server curl.bin oP.apron.out llvmPackages.bintools-unwrapped ] ++ (with python3Packages; [ python pyyaml ]))
+    ++ optionals testDeps ([ curl.bin oP.apron.out llvmPackages.bintools-unwrapped ] ++ (with python3Packages; [ python pyyaml ]))
     ++ optionals ocamlDeps ([ mpfr ppl ] ++ (with oP; [
          ocaml findlib dune_3
          cmdliner

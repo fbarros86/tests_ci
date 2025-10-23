@@ -9,6 +9,10 @@ module IntMap = Mint
 let hierror = hierror ~kind:"compilation error"
 let hierror_reg = hierror ~sub_kind:"register allocation"
 
+let debug () = !Glob_options.debug || !Glob_options.verbosity > 0
+
+let pp_var fmt = Printer.pp_var fmt ~debug:(debug())
+
 let make_counter () =
   let count = ref 0 in
   (fun () ->
@@ -109,8 +113,8 @@ let asm_equality_constraints ~loc pd reg_size asmOp is_move_op (int_of_var: var_
     let x = L.unloc x and y = L.unloc y in
     if types_cannot_conflict reg_size x.v_kind x.v_ty y.v_kind y.v_ty then
       hierror_reg ~loc "Variables %a and %a must be merged due to architectural constraints but must be allocated to incompatible banks “%s” and “%s” (respectively)"
-        (Printer.pp_var ~debug:true) x
-        (Printer.pp_var ~debug:true) y
+        pp_var x
+        pp_var y
         (string_of_kind (kind_of_type reg_size x.v_kind x.v_ty))
         (string_of_kind (kind_of_type reg_size y.v_kind y.v_ty))
   in
@@ -146,7 +150,7 @@ let pp_trace pd asmOp (i: int) fmt (tr: ('info, 'asm) trace) =
   match Hashtbl.find tr i with
   | exception Not_found -> ()
   | j ->
-  let pp_i_noloc = Printer.pp_instr ~debug:true pd asmOp in
+  let pp_i_noloc = Printer.pp_instr ~debug:(debug()) pd asmOp in
   let pp_i fmt i =
     Format.fprintf fmt "@[<v>at %a:@;<1 2>%a@]"
       L.pp_iloc i.i_loc
@@ -317,9 +321,10 @@ let collect_equality_constraints_in_func
       | [] -> addv ii x y
       | warnings ->
          let warnings = List.filter (fun ii -> not L.(isdummy ii.base_loc)) warnings in
-         let pv = Printer.pp_var ~debug:true in
          warning KeptRenaming ii.i_loc
-           "Cannot elide renaming of %a to %a due to the following assignment%s:%a" pv (L.unloc y) pv (L.unloc x)
+           "Cannot elide renaming of %a to %a due to the following assignment%s:%a"
+           pp_var (L.unloc y)
+           pp_var (L.unloc x)
            (match warnings with [ _ ] -> "" | _ -> "s")
            (pp_list "\n" Location.pp_iloc) warnings
     ) renames
@@ -416,8 +421,8 @@ let conflicts_add_one pd reg_size asmOp tbl tr loc (v: var) (w: var) (c: conflic
     let i = Hv.find tbl v in
     let j = Hv.find tbl w in
     if i = j then hierror_reg ~loc:loc "conflicting variables “%a” and “%a” must be merged due to:@;<1 2>%a"
-                    (Printer.pp_var ~debug:true) v
-                    (Printer.pp_var ~debug:true) w
+                    pp_var v
+                    pp_var w
                     (pp_trace pd asmOp i) tr;
     if types_cannot_conflict reg_size v.v_kind v.v_ty w.v_kind w.v_ty then c else
     c |> add_conflicts i j |> add_conflicts j i
@@ -473,6 +478,9 @@ let collect_conflicts pd reg_size asmOp
   and collect_instr c { i_desc ; i_loc ; i_info } =
     collect_instr_r (add c (Lmore i_loc) i_info) i_desc
   and collect_stmt c s = List.fold_left collect_instr c s in
+  (* function arguments do conflict with each other, even if they are not live *)
+  let args = Sv.of_list f.f_args in
+  let c = conflicts_in args (add_one Lnone) c in
   collect_stmt c f.f_body
 
 let iter_variables (cb: var -> unit) (f: ('info, 'asm) func) : unit =
@@ -535,13 +543,13 @@ let vars_retaddr ra =
 let collect_variables_in_prog
       ~(allvars: bool)
       (excluded: Sv.t)
-      (return_adresses: retaddr Hf.t)
+      (return_addresses: retaddr Hf.t)
       (all_reg: var list)
       (f: ('info, 'asm) func list) : int Hv.t * int =
   let fresh, total = make_counter () in
   let tbl : int Hv.t = Hv.create 97 in
   List.iter (fun f ->
-    let extra = vars_retaddr (Hf.find return_adresses f.f_name) in
+    let extra = vars_retaddr (Hf.find return_addresses f.f_name) in
     collect_variables_aux ~allvars excluded fresh tbl extra f) f;
   List.iter (collect_variables_cb ~allvars excluded fresh tbl) all_reg;
   tbl, total ()
@@ -584,25 +592,23 @@ let allocate_one nv vars loc (cnf: conflicts) (x_:var) (x: int) (r: var) (a: A.a
   match A.find x a with
   | Some r' when r' = r -> ()
   | Some r' ->
-     let pv = Printer.pp_var ~debug:true in
      hierror_reg ~loc:(Lmore loc) "cannot allocate %a into %a, the variable is already allocated in %a"
-       pv x_
-       pv r
-       pv r'
+       pp_var x_
+       pp_var r
+       pp_var r'
 
   | None ->
      let c = get_conflict_set x cnf a r in
      if IntSet.is_empty c
      then A.set x r a
      else
-       let pv = Printer.pp_var ~debug:true in
        let regs = reverse_classes nv vars in
        let other = IntSet.fold (fun i -> Sv.union regs.(i)) c Sv.empty |> Sv.elements in
        hierror_reg ~loc:(Lmore loc) "variable %a must be allocated to register %a due to architectural constraints; this register already holds conflicting variable%s: %a"
-         pv x_
+         pp_var x_
          (Printer.pp_var ~debug:false) r
          (match other with [ _ ] -> "" | _ -> "s")
-         (pp_list "; " pv)
+         (pp_list "; " pp_var)
          other
 
 type reg_oracle_t = {
@@ -618,22 +624,67 @@ type reg_oracle_t = {
 module type Regalloc = sig
   type extended_op
 
+  val create_return_addresses : (('info, 'asm) sfundef -> Z.t) -> ('info, 'asm) sfundef list -> retaddr Hf.t
+
   val renaming : (unit, extended_op) func -> (unit, extended_op) func
 
   val subroutine_ra_by_stack : (unit, extended_op) func -> bool
 
+  val get_reg_oracle :
+    (('info, 'asm) func -> bool) ->
+    (var -> var) ->
+    (funname -> Sv.t) -> retaddr -> ('info, 'asm) func -> reg_oracle_t
+
   val alloc_prog :
-    (Var0.Var.var -> var) ->
-    ((unit, extended_op) func -> 'a -> bool) ->
-    ((unit, extended_op) func -> 'a -> Z.t) ->
+    retaddr Hf.t ->
     ('a * (unit, extended_op) func) list ->
-    ('a * reg_oracle_t * (unit, extended_op) func) list
+    (var -> var) * (funname -> Sv.t) * ('a * (unit, extended_op) func) list
 end
 
 module Regalloc (Arch : Arch_full.Arch)
   : Regalloc with type extended_op := (Arch.reg, Arch.regx, Arch.xreg, Arch.rflag, Arch.cond, Arch.asm_op, Arch.extra_op) Arch_extra.extended_op = struct
 
-  let forced_registers translate_var loc nv (vars: int Hv.t) tr (cnf: conflicts)
+  let create_return_addresses get_internal_size (funcs: ('info, 'asm) sfundef list) : retaddr Hf.t =
+      let return_addresses = Hf.create 17 in
+      List.iter (fun ((e, f) as fd) ->
+      let ra =
+         match f.f_cc with
+         | Export _ -> StackDirect
+         | Internal -> assert false
+         | Subroutine _ ->
+           match Arch.callstyle with
+           | Arch_full.StackDirect -> StackDirect
+           | Arch_full.ByReg { call = oreg; return } ->
+             let dfl = oreg <> None && has_call_or_syscall f.f_body in
+             let r = V.mk ("ra_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
+             let rastack =
+               match f.f_annot.retaddr_kind with
+               | None -> dfl
+               | Some k -> dfl || k = OnStack in
+             (* Fixme: Add an option in Arch to say when the tmp reg is needed *)
+             let tmp_needed =
+               (* if ra is passed on the stack, the amount to add after the call is not the same
+                  as the amount to subtract before the call, we need to check both *)
+               Arch.alloc_stack_need_extra (get_internal_size fd) ||
+               rastack && Arch.alloc_stack_need_extra (Z.sub (get_internal_size fd) (Z.of_int (size_of_ws Arch.reg_size))) in
+             let tmp =
+               if tmp_needed then
+                 let tmp = V.mk ("tmp_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
+                 Some tmp
+               else None in
+             if rastack then
+               let r_return =
+                 if return then
+                   let r_return = V.mk ("ra_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
+                   Some r_return
+                 else None
+               in
+               StackByReg (r, r_return, tmp)
+             else ByReg (r, tmp) in
+      Hf.add return_addresses f.f_name ra) funcs;
+      return_addresses
+
+  let forced_registers loc nv (vars: int Hv.t) tr (cnf: conflicts)
       (lvs: 'ty glvals) (op: 'asm sopn) (es: 'ty gexprs)
       (a: A.allocation) : conflicts =
     let allocate_one x y a =
@@ -664,25 +715,20 @@ module Regalloc (Arch : Arch_full.Arch)
         match ad with
         | ADImplicit v ->
            begin match lv with
-           | Lvar w -> allocate_one w (translate_var v) a
+           | Lvar w -> allocate_one w (Conv.var_of_cvar v) a
            | _ -> assert false
            end
         | ADExplicit _ -> ()) id.i_out lvs;
     let cnf =
       List.fold_left2 (fun cnf ad e ->
           match ad with
-          | ADImplicit v ->
-            mallocate_one e (translate_var v) a;
-            cnf
+          | ADImplicit v
           | ADExplicit (_, ACR_exact v) ->
-            mallocate_one e (translate_var v) a;
-            cnf
-          | ADExplicit (_, ACR_vector v) ->
-            mallocate_one e (translate_var v) a;
+            mallocate_one e (Conv.var_of_cvar v) a;
             cnf
           | ADExplicit (_, (ACR_any)) -> cnf
           | ADExplicit (_, ACR_subset rs) ->
-             let rs = List.rev_map translate_var rs in
+             let rs = List.rev_map Conv.var_of_cvar rs in
               match e with
               | Pvar x ->
                   List.fold_left (fun cnf r ->
@@ -693,7 +739,7 @@ module Regalloc (Arch : Arch_full.Arch)
           in
           cnf
 
-let allocate_forced_registers return_addresses translate_var nv (vars: int Hv.t) tr (cnf: conflicts)
+let allocate_forced_registers return_addresses nv (vars: int Hv.t) tr (cnf: conflicts)
     (f: ('info, 'asm) func) (a: A.allocation) : conflicts =
   let split ~ctxt ~num =
     function
@@ -717,9 +763,9 @@ let allocate_forced_registers return_addresses translate_var nv (vars: int Hv.t)
                 let ctxt = "large " ^ ctxt in
                 let d, xs = split ~ctxt ~num:num_xs xs in d, rs, xs
             | Extra ->
-               hierror_reg ~loc:(Lmore loc) "unexpected extra register %a" (Printer.pp_var ~debug:true) p
+               hierror_reg ~loc:(Lmore loc) "unexpected extra register %a" pp_var p
             | Flag ->
-               hierror_reg ~loc:(Lmore loc) "unexpected flag register %a" (Printer.pp_var ~debug:true) p
+               hierror_reg ~loc:(Lmore loc) "unexpected flag register %a" pp_var p
             | Unknown ty ->
               hierror_reg ~loc:(Lmore loc) "unknown type %a for forced register %a"
                 PrintCommon.pp_ty ty (Printer.pp_var ~debug:true) p
@@ -737,7 +783,7 @@ let allocate_forced_registers return_addresses translate_var nv (vars: int Hv.t)
     function
     | Cfor (_, _, s)
       -> alloc_stmt s c
-    | Copn (lvs, _, op, es) -> forced_registers translate_var loc nv vars tr c lvs op es a
+    | Copn (lvs, _, op, es) -> forced_registers loc nv vars tr c lvs op es a
     | Csyscall(lvs, _, es) ->
        let get_a = function Pvar { gv ; gs = Slocal } -> L.unloc gv | _ -> assert false in
        let get_r = function Lvar gv -> L.unloc gv | _ -> assert false in
@@ -866,7 +912,7 @@ let two_phase_coloring
   | i :: _, [] ->
       let x = List.hd (Hashtbl.find variables i) in
       hierror_reg ~loc:Lnone "unable to allocate %a: bank “%s” is empty on this architecture"
-        (Printer.pp_dvar ~debug:true) x
+        (Printer.pp_dvar ~debug:(debug())) x
         (string_of_kind (kind_of_type Arch.reg_size x.v_kind x.v_ty))
   | _, _ -> ()
   end;
@@ -874,6 +920,7 @@ let two_phase_coloring
       let has_no_conflict v = does_not_conflict i cnf a v in
       match List.filter has_no_conflict registers with
       | [] ->
+         if !Glob_options.verbosity > 0 then
          let pv = Printer.pp_dvar ~debug:true in
          let ppvl fmt = List.iter @@ Format.fprintf fmt "\n    %a" pv in
          let pp_conflicts fmt c =
@@ -898,6 +945,7 @@ let two_phase_coloring
          hierror_reg ~loc:Lnone "no more free register to allocate variable:%a\nConflicts with:\n%a"
            ppvl (Hashtbl.find variables i)
            pp_conflicts c
+         else hierror_reg ~loc:Lnone "cannot solve the register allocation problem."
       | x :: regs ->
         (* Any register in [x; regs] is valid: the choice made here is arbitrary. *)
         let y = get_friend_registers x fr a i regs in
@@ -911,7 +959,7 @@ let check_allocated
   | [] -> ()
   | m ->
      hierror_reg ~loc:Lnone "variables { %a } remain unallocated"
-       (pp_list "; " (Printer.pp_var ~debug:true)) m
+       (pp_list "; " pp_var) m
 
 let greedy_allocation
     (vars: int Hv.t)
@@ -935,7 +983,7 @@ let greedy_allocation
       | Flag -> push_var flags i v
       | Unknown ty ->
           hierror_reg ~loc:Lnone "unable to allocate variable %a: no register bank for type %a"
-            (Printer.pp_dvar ~debug:true) v PrintCommon.pp_ty ty
+            pp_var v PrintCommon.pp_ty ty
       ) vars;
   two_phase_coloring Arch.allocatable_vars scalars cnf fr a;
   two_phase_coloring Arch.extra_allocatable_vars extra_scalars cnf fr a;
@@ -1002,7 +1050,6 @@ let post_process
   ~not_saved_stack
   ~stack_needed
   (subst: var -> var)
-  (live: Sv.t)
   ~(killed: funname -> Sv.t)
   (f: _ func) :
   Sv.t * var option =
@@ -1016,7 +1063,6 @@ let post_process
      end
   | Export _ ->
      begin
-       assert (Sv.is_empty live);
        let used_in_f = List.fold_left (fun s x -> Sv.add (subst x) s) killed_in_f f.f_args in
        let free_regs = Sv.diff allocatable_vars used_in_f in
        let to_save = Sv.inter callee_save_vars killed_in_f in
@@ -1172,8 +1218,8 @@ let pp_liveness vars liveness_per_callsite liveness_table a =
     let extern = !m_word, !m_extra, !m_vector, !m_flag in
     pp_recap Format.std_formatter fn intern extern)
 
-let global_allocation translate_var get_internal_size (funcs: ('info, 'asm) func list) :
-  (unit, 'asm) func list * (funname -> Sv.t) * (var -> var) * (funname -> Sv.t) * retaddr Hf.t =
+let global_allocation return_addresses (funcs: ('info, 'asm) func list) :
+  (unit, 'asm) func list * (funname -> Sv.t) * (var -> var) * (funname -> Sv.t) =
   (* Preprocessing of functions:
     - ensure all variables are named (no anonymous assign)
     - generate a fresh variable to hold the return address (if needed)
@@ -1184,44 +1230,12 @@ let global_allocation translate_var get_internal_size (funcs: ('info, 'asm) func
     Initial 'info are preserved in the result.
    *)
   let liveness_table : (Sv.t * Sv.t, 'asm) func Hf.t = Hf.create 17 in
-  let return_addresses : retaddr Hf.t = Hf.create 17 in
   let killed_map : Sv.t Hf.t = Hf.create 17 in
   let killed fn = Hf.find killed_map fn in
   let preprocess f =
     let f = f |> fill_in_missing_names |> Ssa.split_live_ranges false in
     Hf.add liveness_table f.f_name (Liveness.live_fd true f);
-    (* compute where the return address will be stored *)
-    let ra =
-       match f.f_cc with
-       | Export _ -> StackDirect
-       | Internal -> assert false
-       | Subroutine _ ->
-         match Arch.callstyle with
-         | Arch_full.StackDirect -> StackDirect
-         | Arch_full.ByReg { call = oreg; return } ->
-           let dfl = oreg <> None && has_call_or_syscall f.f_body in
-           let r = V.mk ("ra_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
-           (* Fixme: Add an option in Arch to say when the tmp reg is needed *)
-           let tmp_needed = Arch.alloc_stack_need_extra (get_internal_size f) in
-           let tmp =
-             if tmp_needed then
-               let tmp = V.mk ("tmp_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
-               Some tmp
-             else None in
-           let rastack =
-             match f.f_annot.retaddr_kind with
-             | None -> dfl
-             | Some k -> dfl || k = OnStack in
-           if rastack then
-             let r_return =
-               if return then
-                 let r_return = V.mk ("ra_"^f.f_name.fn_name) (Reg(Normal,Direct)) (tu Arch.reg_size) f.f_loc [] in
-                 Some r_return
-               else None
-             in
-             StackByReg (r, r_return, tmp)
-           else ByReg (r, tmp) in
-    Hf.add return_addresses f.f_name ra;
+    let ra = Hf.find return_addresses f.f_name in
     let written =
       let written, cg = written_vars_fc f in
       let written =
@@ -1361,7 +1375,7 @@ let global_allocation translate_var get_internal_size (funcs: ('info, 'asm) func
 
   let conflicts =
     List.fold_left
-      (fun c f -> allocate_forced_registers return_addresses translate_var nv vars tr c f a)
+      (fun c f -> allocate_forced_registers return_addresses nv vars tr c f a)
       conflicts
       funcs
   in
@@ -1375,49 +1389,56 @@ let global_allocation translate_var get_internal_size (funcs: ('info, 'asm) func
   get_liveness,
   subst
   , killed
-  , return_addresses
 
-let alloc_prog translate_var (has_stack: ('info, 'asm) func -> 'a -> bool) get_internal_size (dfuncs: ('a * ('info, 'asm) func) list)
-    : ('a * reg_oracle_t * (unit, 'asm) func) list =
+let allocatable_vars = Sv.of_list Arch.allocatable_vars
+let callee_save_vars = Sv.of_list Arch.callee_save_vars
+let not_saved_stack = Sv.of_list (Arch.not_saved_stack @ Arch.callee_save_vars)
+
+let get_reg_oracle
+      (has_stack: ('info, 'asm) func -> bool)
+      subst
+      killed
+      return_address
+      f : reg_oracle_t =
+  let stack_needed = has_stack f in
+  let to_save, ro_rsp =
+    post_process
+      ~allocatable_vars
+      ~callee_save_vars
+      ~not_saved_stack
+      ~stack_needed
+      ~killed
+      subst
+      f in
+  let ro_return_address =
+    match return_address with
+    | StackDirect -> StackDirect
+    | StackByReg(ra_call, ra_return, tmp) ->
+       StackByReg (subst ra_call, Option.map subst ra_return, Option.map subst tmp)
+    | ByReg(r, tmp) -> ByReg (subst r, Option.map subst tmp) in
+  let ro_to_save = if FInfo.is_export f.f_cc then Sv.elements to_save else [] in
+  { ro_to_save ; ro_rsp ; ro_return_address }
+
+let alloc_prog return_addresses (dfuncs: ('a * ('info, 'asm) func) list)
+    : (var -> var) * _ * ('a * (unit, 'asm) func) list =
   (* Ensure that instruction locations are really unique,
      so that there is no confusion on the position of the “extra free register”. *)
   let dfuncs =
     List.map (fun (a,f) -> a, Prog.refresh_i_loc_f f) dfuncs in
 
   let extra : 'a Hf.t = Hf.create 17 in
-  let allocatable_vars = Sv.of_list Arch.allocatable_vars in
-  let callee_save_vars = Sv.of_list Arch.callee_save_vars in
-  let not_saved_stack =
-    Sv.of_list (Arch.not_saved_stack @ Arch.callee_save_vars)
-  in
 
-  let funcs, get_liveness, subst, killed, return_addresses =
+  let funcs, get_liveness, subst, killed =
     dfuncs
     |> List.map (fun (a, f) -> Hf.add extra f.f_name a; f)
-    |> global_allocation translate_var (fun f -> get_internal_size f (Hf.find extra f.f_name))
+    |> global_allocation return_addresses
   in
+  subst,
+  killed,
   funcs |>
   List.map (fun f ->
       let e = Hf.find extra f.f_name in
-      let stack_needed = has_stack f e in
-      let to_save, ro_rsp =
-         post_process
-          ~allocatable_vars
-          ~callee_save_vars
-          ~not_saved_stack
-          ~stack_needed
-          ~killed
-          subst
-          (get_liveness f.f_name)
-          f in
-      let ro_return_address =
-        match Hf.find return_addresses f.f_name with
-        | StackDirect -> StackDirect
-        | StackByReg(ra_call, ra_return, tmp) ->
-          StackByReg (subst ra_call, Option.map subst ra_return, Option.map subst tmp)
-        | ByReg(r, tmp) -> ByReg (subst r, Option.map subst tmp) in
-      let ro_to_save = if FInfo.is_export f.f_cc then Sv.elements to_save else [] in
-      e, { ro_to_save ; ro_rsp ; ro_return_address }, f
+      e, f
     )
 
 end

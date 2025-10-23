@@ -28,6 +28,7 @@ let pp_reg_address_aux base disp off scal =
       hierror
       ~loc:Lnone
       ~kind:"assembly printing"
+      ~internal:true
       "the address computation is too complex: an intermediate variable might be needed"
 
 let pp_imm = pp_imm imm_pre
@@ -35,7 +36,7 @@ let pp_imm = pp_imm imm_pre
 let pp_register = pp_register arch
 
 let pp_reg_address addr =
-  let addr = parse_reg_adress arch addr in
+  let addr = parse_reg_address arch addr in
   pp_reg_address_aux addr.base addr.displacement addr.offset addr.scale
 
 let pp_condition_kind  (ck : Riscv_decl.condition_kind) =

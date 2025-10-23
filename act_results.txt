@@ -1,0 +1,153 @@
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Set up job
+[EasyCrypt/EasyCrypt/Build & Prove] 🚀  Start image=ghcr.io/catthehacker/ubuntu:act-latest
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker pull image=ghcr.io/catthehacker/ubuntu:act-latest platform=linux/amd64 username= forcePull=true
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker create image=ghcr.io/catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="host"
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker run image=ghcr.io/catthehacker/ubuntu:act-latest platform=linux/amd64 entrypoint=["tail" "-f" "/dev/null"] cmd=[] network="host"
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker exec cmd=[node --no-warnings -e console.log(process.execPath)] user= workdir=
+[EasyCrypt/EasyCrypt/Build & Prove]   ✅  Success - Set up job
+[EasyCrypt/EasyCrypt/Build & Prove]   ☁  git clone 'https://github.com/cachix/install-nix-action' # ref=v31
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Pre cachix/install-nix-action@v31
+[EasyCrypt/EasyCrypt/Build & Prove]   ✅  Success - Pre cachix/install-nix-action@v31 [56.873917ms]
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Main actions/checkout@v4
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker cp src=/Users/xiquita/Desktop/Work/jasmin_branches/formosa-mlkem-ci/formosa-mlkem/. dst=/Users/xiquita/Desktop/Work/jasmin_branches/formosa-mlkem-ci/formosa-mlkem
+[EasyCrypt/EasyCrypt/Build & Prove]   ✅  Success - Main actions/checkout@v4 [3.693614833s]
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Main cachix/install-nix-action@v31
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker cp src=/Users/xiquita/.cache/act/cachix-install-nix-action@v31/ dst=/var/run/act/actions/cachix-install-nix-action@v31/
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Main ${GITHUB_ACTION_PATH}/install-nix.sh
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /var/run/act/workflow/1-composite-0.sh] user= workdir=
+[EasyCrypt/EasyCrypt/Build & Prove]   ❓  ::group::Enabling KVM support
+[EasyCrypt/EasyCrypt/Build & Prove]   | tee: /etc/udev/rules.d/99-install-nix-action-kvm.rules: No such file or directory
+[EasyCrypt/EasyCrypt/Build & Prove]   | KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"
+[EasyCrypt/EasyCrypt/Build & Prove]   | sudo: udevadm: command not found
+[EasyCrypt/EasyCrypt/Build & Prove]   | KVM is not available
+[EasyCrypt/EasyCrypt/Build & Prove]   ❓  ::endgroup::
+[EasyCrypt/EasyCrypt/Build & Prove]   ❓  ::group::Installing Nix
+[EasyCrypt/EasyCrypt/Build & Prove]   | installer options: --no-channel-add --nix-extra-conf-file /tmp/tmp.gOhnwP2nTq/nix.conf
+[EasyCrypt/EasyCrypt/Build & Prove]   | *   Trying 146.75.90.217:443...
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Connected to releases.nixos.org (146.75.90.217) port 443 (#0)
+[EasyCrypt/EasyCrypt/Build & Prove]   | * ALPN, offering h2
+[EasyCrypt/EasyCrypt/Build & Prove]   | * ALPN, offering http/1.1
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  CAfile: /etc/ssl/certs/ca-certificates.crt
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  CApath: /etc/ssl/certs
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [512 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.3 (IN), TLS handshake, Server hello (2):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [104 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS handshake, Certificate (11):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [2827 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [300 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS handshake, Server finished (14):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [4 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [37 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Finished (20):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [1 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS handshake, Finished (20):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [16 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Finished (20):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Certificate Status (22):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS handshake, Finished (20):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [16 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * SSL connection using TLSv1.2 / ECDHE-RSA-CHACHA20-POLY1305
+[EasyCrypt/EasyCrypt/Build & Prove]   | * ALPN, server accepted to use h2
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Server certificate:
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  subject: CN=releases.nixos.org
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  start date: Aug 14 21:00:27 2025 GMT
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  expire date: Sep 15 21:00:26 2026 GMT
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  subjectAltName: host "releases.nixos.org" matched cert's "releases.nixos.org"
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  issuer: C=BE; O=GlobalSign nv-sa; CN=GlobalSign Atlas R3 DV TLS CA 2025 Q3
+[EasyCrypt/EasyCrypt/Build & Prove]   | *  SSL certificate verify ok.
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Using HTTP2, server supports multiplexing
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Connection state changed (HTTP/2 confirmed)
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Using Stream ID: 1 (easy handle 0x5555555cf9f0)
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | > GET /nix/nix-2.31.2/install HTTP/2
+[EasyCrypt/EasyCrypt/Build & Prove]   | > Host: releases.nixos.org
+[EasyCrypt/EasyCrypt/Build & Prove]   | > user-agent: curl/7.81.0
+[EasyCrypt/EasyCrypt/Build & Prove]   | > accept: */*
+[EasyCrypt/EasyCrypt/Build & Prove]   | > 
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | } [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | < HTTP/2 200 
+[EasyCrypt/EasyCrypt/Build & Prove]   | < last-modified: Thu, 18 Sep 2025 11:37:32 GMT
+[EasyCrypt/EasyCrypt/Build & Prove]   | < etag: "12f89d1673c48991f81bf17d64720351"
+[EasyCrypt/EasyCrypt/Build & Prove]   | < x-amz-server-side-encryption: AES256
+[EasyCrypt/EasyCrypt/Build & Prove]   | < content-type: text/plain
+[EasyCrypt/EasyCrypt/Build & Prove]   | < server: AmazonS3
+[EasyCrypt/EasyCrypt/Build & Prove]   | < via: 1.1 varnish, 1.1 varnish
+[EasyCrypt/EasyCrypt/Build & Prove]   | < access-control-allow-origin: *
+[EasyCrypt/EasyCrypt/Build & Prove]   | < accept-ranges: bytes
+[EasyCrypt/EasyCrypt/Build & Prove]   | < age: 120052
+[EasyCrypt/EasyCrypt/Build & Prove]   | < date: Thu, 02 Oct 2025 11:29:43 GMT
+[EasyCrypt/EasyCrypt/Build & Prove]   | < x-served-by: cache-dub4324-DUB, cache-lis1490044-LIS
+[EasyCrypt/EasyCrypt/Build & Prove]   | < x-cache: HIT, HIT
+[EasyCrypt/EasyCrypt/Build & Prove]   | < x-cache-hits: 151, 0
+[EasyCrypt/EasyCrypt/Build & Prove]   | < content-length: 4267
+[EasyCrypt/EasyCrypt/Build & Prove]   | < 
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [962 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * TLSv1.2 (IN), TLS header, Supplemental data (23):
+[EasyCrypt/EasyCrypt/Build & Prove]   | { [5 bytes data]
+[EasyCrypt/EasyCrypt/Build & Prove]   | * Connection #0 to host releases.nixos.org left intact
+[EasyCrypt/EasyCrypt/Build & Prove]   | downloading Nix 2.31.2 binary tarball for x86_64-linux from 'https://releases.nixos.org/nix/nix-2.31.2/nix-2.31.2-x86_64-linux.tar.xz' to '/tmp/nix-binary-tarball-unpack.qQr6pRCuQ1'...
+[EasyCrypt/EasyCrypt/Build & Prove]   |   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[EasyCrypt/EasyCrypt/Build & Prove]   |                                  Dload  Upload   Total   Spent    Left  Speed
+[EasyCrypt/EasyCrypt/Build & Prove]   |   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0 24.6M    0  191k    0     0   148k      0  0:02:50  0:00:01  0:02:49  149k  2 24.6M    2  735k    0     0   392k      0  0:01:04  0:00:01  0:01:03  393k 47 24.6M   47 11.6M    0     0  4151k      0  0:00:06  0:00:02  0:00:04 4160k 97 24.6M   97 24.0M    0     0  6361k      0  0:00:03  0:00:03 --:--:-- 6371k100 24.6M  100 24.6M    0     0  6431k      0  0:00:03  0:00:03 --:--:-- 6440k
+[EasyCrypt/EasyCrypt/Build & Prove]   | Note: a multi-user installation is possible. See https://nix.dev/manual/nix/stable/installation/installing-binary.html#multi-user-installation
+[EasyCrypt/EasyCrypt/Build & Prove]   | performing a single-user installation of Nix...
+[EasyCrypt/EasyCrypt/Build & Prove]   | [1;31mwarning: installing Nix as root is not supported by this script![0m
+[EasyCrypt/EasyCrypt/Build & Prove]   | directory /nix does not exist; creating it by running 'mkdir -m 0755 /nix && chown root /nix' using sudo
+[EasyCrypt/EasyCrypt/Build & Prove]   | copying Nix to /nix/store...
+[EasyCrypt/EasyCrypt/Build & Prove]   | 
+[EasyCrypt/EasyCrypt/Build & Prove]   | warning: unknown setting 'build-by-default'
+[EasyCrypt/EasyCrypt/Build & Prove]   | warning: unknown setting 'build-by-default'
+[EasyCrypt/EasyCrypt/Build & Prove]   | installing 'nix-2.31.2'
+[EasyCrypt/EasyCrypt/Build & Prove]   | error:
+[EasyCrypt/EasyCrypt/Build & Prove]   |        … while setting up the build environment
+[EasyCrypt/EasyCrypt/Build & Prove]   | 
+[EasyCrypt/EasyCrypt/Build & Prove]   |        error: unable to load seccomp BPF program: Invalid argument
+[EasyCrypt/EasyCrypt/Build & Prove]   | /tmp/nix-binary-tarball-unpack.qQr6pRCuQ1/unpack/nix-2.31.2-x86_64-linux/install: unable to install Nix into your default profile
+[EasyCrypt/EasyCrypt/Build & Prove]   ❌  Failure - Main ${GITHUB_ACTION_PATH}/install-nix.sh [17.350516917s]
+[EasyCrypt/EasyCrypt/Build & Prove] exitcode '1': failure
+[EasyCrypt/EasyCrypt/Build & Prove]   ❌  Failure - Main cachix/install-nix-action@v31 [18.299654291s]
+[EasyCrypt/EasyCrypt/Build & Prove] exitcode '1': failure
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Post cachix/install-nix-action@v31
+[EasyCrypt/EasyCrypt/Build & Prove]   🐳  docker cp src=/Users/xiquita/.cache/act/cachix-install-nix-action@v31/ dst=/var/run/act/actions/cachix-install-nix-action@v31/
+[EasyCrypt/EasyCrypt/Build & Prove]   ✅  Success - Post cachix/install-nix-action@v31 [257.740708ms]
+[EasyCrypt/EasyCrypt/Build & Prove] ⭐ Run Complete job
+[EasyCrypt/EasyCrypt/Build & Prove]   ✅  Success - Complete job
+[EasyCrypt/EasyCrypt/Build & Prove] 🏁  Job failed

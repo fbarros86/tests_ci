@@ -893,7 +893,7 @@ let mk_logic_info eop =
 
 let mk_rot_info eop =
   { opi_op = mk_logic_ws eop;
-    opi_wcmp = {intok = false; wintok = false}, cmp_8_64;
+    opi_wcmp = {intok = false; wintok = false}, cmp_8_256;
     opi_vcmp = None; }
 
 (* -------------------------------------------------------------------- *)
@@ -1533,6 +1533,7 @@ let extract_size str : string * Sopn.prim_x86_suffix option =
     | "8u8"   -> PVsv (W.Unsigned, W.VE8,  W.U64)
     | "4u16"  -> PVsv (W.Unsigned, W.VE16, W.U64)
     | "2u32"  -> PVsv (W.Unsigned, W.VE32, W.U64)
+    | "1u64"  -> PVsv (W.Unsigned, W.VE64, W.U64)
     | "16u8"  -> PVsv (W.Unsigned, W.VE8,  W.U128)
     | "8u16"  -> PVsv (W.Unsigned, W.VE16, W.U128)
     | "4u32"  -> PVsv (W.Unsigned, W.VE32, W.U128)
@@ -1607,7 +1608,6 @@ Deprecated intrinsic operators map (old name -> new name)
 *)
 let deprecated_intrinsic =
   let m = Ms.empty in
-  let m = Ms.add "VPBLENDVB" "BLENDV" m in
   Ms.add "VPMOVMSKB" "MOVEMASK" m
 
 (**
@@ -1750,16 +1750,6 @@ type ('a, 'b, 'c, 'd, 'e, 'f, 'g) arch_info = {
 
 let tt_lvalues arch_info env loc (pimp, pls) implicit tys =
   let loc = loc_of_tuples loc (List.map P.L.loc pls) in
-  let ignore_ = L.mk_loc loc S.PLIgnore in
-
-
-  let extend_pls n =
-     let nargs = List.length pls in
-     if nargs < n then
-       let nextra = n - nargs in
-       warning IntroduceNone (L.i_loc0 loc) "introduce %d _ lvalues" nextra;
-       List.make nextra ignore_ @ pls
-     else pls in
 
   let combines =
         [ "<s" , E.CF_LT Wsize.Signed
@@ -1775,14 +1765,10 @@ let tt_lvalues arch_info env loc (pimp, pls) implicit tys =
 
   let pls, pimp_c, implicits =
     match pimp, implicit with
-    | None, _ -> extend_pls (List.length tys), [], []
+    | None, _ -> pls, [], []
     | Some pimp, None -> rs_tyerror ~loc:(L.loc pimp) (string_error "no implicit argument expected");
     | Some pimp, Some implicit ->
       let pimp = L.unloc pimp in
-      let nb_explicit =
-        let open Sopn in
-        List.count_matching (function ADExplicit _ -> true | _ -> false) implicit in
-      let pls = extend_pls nb_explicit in
       let arguments =
         (* FIXME this is not generic *)
         let open Sopn in
@@ -1803,6 +1789,7 @@ let tt_lvalues arch_info env loc (pimp, pls) implicit tys =
       List.iter check pimp;
       let pimp_c, pimp_f = List.partition (fun (id,_) -> List.mem_assoc (L.unloc id) combines) pimp in
 
+      let has_no_pimp = List.is_empty pimp_c in
       let implicits = ref [] in
       let get_implicit i =
         let error loc =
@@ -1816,10 +1803,12 @@ let tt_lvalues arch_info env loc (pimp, pls) implicit tys =
                                                    ~on_id:(fun loc _nid s -> mk loc s)
                                                    error) pimp_f in
         match a with
+        | Some a -> a
         | None ->
-          (try mk loc (List.assoc i (Env.get_known_implicits env))
-           with Not_found -> L.mk_loc loc (S.PLIgnore))
-        | Some a -> a in
+           let default = L.mk_loc loc S.PLIgnore in
+           if has_no_pimp then default else
+             try mk loc (List.assoc i (Env.get_known_implicits env))
+             with Not_found -> default in
 
       let rec aux arguments pls =
         match arguments, pls with

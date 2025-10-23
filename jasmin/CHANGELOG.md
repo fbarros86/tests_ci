@@ -1,3 +1,77 @@
+# Jasmin 2025.06.1 — Nancy, 2025-08-29
+
+## New features
+
+- Add support for the MMX/SSE instruction `PADD`
+  ([PR #1196](https://github.com/jasmin-lang/jasmin/pull/1196)).
+
+- Extraction as EasyCrypt code targets version 2025.08
+  ([PR #1255](https://github.com/jasmin-lang/jasmin/pull/1255)).
+
+- Add support for x86 `BSR` instruction
+  ([PR #1266](https://github.com/jasmin-lang/jasmin/pull/1266);
+  fixes [#1257](https://github.com/jasmin-lang/jasmin/issues/1257)).
+
+## Bug fixes
+
+- Linter : More precise diagnostics
+  ([PR #1224](https://github.com/jasmin-lang/jasmin/pull/1224),
+  [PR #1199](https://github.com/jasmin-lang/jasmin/pull/1199);
+  fixes [#1223](https://github.com/jasmin-lang/jasmin/pull/1223)).
+
+- Consider LHS array variables as assigned
+  ([PR #1214](https://github.com/jasmin-lang/jasmin/pull/1214)).
+
+- Fix SCT check of `for` loops
+  ([PR #1219](https://github.com/jasmin-lang/jasmin/pull/1219);
+  fixes [#1218](https://github.com/jasmin-lang/jasmin/issues/1218)).
+
+- Ensure that `#MOVEMASK` can be used with 32-bit l-values
+  ([PR #1211](https://github.com/jasmin-lang/jasmin/pull/1211)).
+
+- Enable machine word rotation at any size
+  ([PR #1235](https://github.com/jasmin-lang/jasmin/pull/1235);
+  fixes [#854](https://github.com/jasmin-lang/jasmin/issues/854)).
+
+- Fix register allocation of dead function arguments
+  ([PR #1234](https://github.com/jasmin-lang/jasmin/pull/1234);
+  fixes [#426](https://github.com/jasmin-lang/jasmin/issues/426)).
+
+- Safety checker handles x86 instructions with zero-extension
+  ([PR #1240](https://github.com/jasmin-lang/jasmin/pull/1240)).
+
+- Escape '#' sign in variable and function names
+  ([PR #1241](https://github.com/jasmin-lang/jasmin/pull/1241)).
+
+- Make sure linearization generate correct instructions
+  when the stack frame is large and the return address passed
+  on the stack
+  ([PR #1247](https://github.com/jasmin-lang/jasmin/pull/1247)).
+
+## Other changes
+
+- The deprecated x86 intrinsic `#VPBLENDVB` has been removed
+  ([PR #1208](https://github.com/jasmin-lang/jasmin/pull/1208)).
+
+- More precise handling of `#POPCNT` in the safety checker
+  ([PR #1197](https://github.com/jasmin-lang/jasmin/pull/1197)).
+
+- Programs with obvious out-of-bounds array accesses are rejected at
+  compile-time
+  ([PR #1232](https://github.com/jasmin-lang/jasmin/pull/1232)).
+
+- On x86, `#set0_64` is now compiled into a 32-bit xor zero-extended to 64 bits
+  ([PR #1242](https://github.com/jasmin-lang/jasmin/pull/1242)).
+
+- On x86, the compiler emits `DEC` instructions instead of `ADD` with a `-1`
+  immediate
+  ([PR #1256](https://github.com/jasmin-lang/jasmin/pull/1256)).
+
+- The compiler no longer introduces L-values; the command line flag `-w_` has
+  been removed
+  ([PR #1263](https://github.com/jasmin-lang/jasmin/pull/1263),
+  [PR #1264](https://github.com/jasmin-lang/jasmin/pull/1264)).
+
 # Jasmin 2025.06.0 — Nancy, 2025-06-18
 
 ## New features

@@ -65,6 +65,7 @@ module X86_core = struct
     | ANDN _ -> true
     | BLENDV (VE8, _) -> true
     | BLENDV _ -> false (* Not DOIT *)
+    | BSR _ -> false (* Not DOIT *)
     | BSWAP _ -> false (* Not DOIT *)
     | BT _ -> true
     | BTR _ -> true
@@ -92,6 +93,7 @@ module X86_core = struct
     | MOVSX _ -> true
     | MOVV _ -> true
     | MOVX _ -> true
+    | PADD _ -> true
     | POR -> true
     | MOVZX _ -> true
     | MUL _ -> true
@@ -158,7 +160,6 @@ module X86_core = struct
     | VPANDN _ -> true
     | VPAVG _ -> true
     | VPBLEND _ -> true
-    | VPBLENDVB _ -> true
     | VPBROADCAST _ -> true
     | VPCLMULQDQ _ -> true
     | VPCMPEQ _ -> true

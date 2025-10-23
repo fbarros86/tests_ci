@@ -154,11 +154,12 @@ abbrev [-printing] XCHG_64 (x y:W64.t) = swap_ x y.
 
 | LZCNT  of wsize             (* number of leading zero *)
 | TZCNT  of wsize             (* number of trailing zero *)
+| BSR    of wsize             (* bit scan reverse *)
 *)
 
 (* Remark: W8.ALU W16.ALU W32.ALU W64.ALU are exported *)
 (* ALU defines the operators: 
-   ADD SUB IMUL IMUL_r IMUL_ri DIV IDIV CQO ADC SBB NEG INC DEC LZCNT TZCNT
+   ADD SUB IMUL IMUL_r IMUL_ri DIV IDIV CQO ADC SBB NEG INC DEC LZCNT TZCNT BSR
 *)
 
 (* Flag *)
@@ -260,10 +261,20 @@ qed.
 (*
     | MOVX  of wsize
     | POR
+    | PADD of velem & wsize
 *)
 op MOVX_32 (v: W32.t) = v.
 op MOVX_64 (v: W64.t) = v.
 abbrev [-printing] POR = W64.(`|`).
+
+op PADD_8u8 (x y: W64.t) = map2 W8.(+) x y.
+op PADD_4u16 (x y: W64.t) = map2 W16.(+) x y.
+op PADD_2u32 (x y: W64.t) = map2 W32.(+) x y.
+op PADD_1u64 (x y: W64.t) = x + y.
+abbrev [-printing] PADD_16u8 = VPADD_16u8.
+abbrev [-printing] PADD_8u16 = VPADD_8u16.
+abbrev [-printing] PADD_4u32 = VPADD_4u32.
+abbrev [-printing] PADD_2u64 = VPADD_2u64.
 
 (* -------------------------------------------------------------------- *)
   (* SSE instructions *)
@@ -552,25 +563,18 @@ abbrev [-printing] VPBLEND_8u32 = VPBLENDD_256.
 
 (* ------------------------------------------------------------------- *)
 (*
-| VPBLENDVB `(wsize)
+| BLENDV of velem & vsize
 *)
-op VPBLENDVB_128 (v1 v2 m: W128.t) : W128.t =
+op BLENDV_16u8 (v1 v2 m: W128.t) : W128.t =
   let choose = fun n =>
     let w = if msb (m \bits8 n) then v2 else v1 in
     w \bits8 n in
   pack16 [choose 0; choose 1; choose 2; choose 3; choose 4; choose 5; choose 6; choose 7;
           choose 8; choose 9; choose 10; choose 11; choose 12; choose 13; choose 14; choose 15].
 
-op VPBLENDVB_256 (v1 v2 m: W256.t) : W256.t =
-  pack2 [VPBLENDVB_128 (v1 \bits128 0) (v2 \bits128 0) (m \bits128 0);
-         VPBLENDVB_128 (v1 \bits128 1) (v2 \bits128 1) (m \bits128 1)].
-
-(* ------------------------------------------------------------------- *)
-(*
-| BLENDV of velem & vsize
-*)
-abbrev BLENDV_16u8 = VPBLENDVB_128.
-abbrev BLENDV_32u8 = VPBLENDVB_256.
+op BLENDV_32u8 (v1 v2 m: W256.t) : W256.t =
+  pack2 [BLENDV_16u8 (v1 \bits128 0) (v2 \bits128 0) (m \bits128 0);
+         BLENDV_16u8 (v1 \bits128 1) (v2 \bits128 1) (m \bits128 1)].
 
 op BLENDV_4u32 (v1 v2 m: W128.t) : W128.t =
   let choose = fun n =>
@@ -841,27 +845,27 @@ op VPMOVMSKB_u256u64 (v: W256.t) =
 *)
 op MOVEMASK_16u8 (v: W128.t) =
    let vb = W16u8.to_list v in
-   W64.bits2w (map W8.msb vb).
+   W32.bits2w (map W8.msb vb).
 
 op MOVEMASK_32u8 (v: W256.t) =
    let vb = W32u8.to_list v in
-   W64.bits2w (map W8.msb vb).
+   W32.bits2w (map W8.msb vb).
 
 op MOVEMASK_4u32 (v: W128.t) =
    let vb = W4u32.to_list v in
-   W64.bits2w (map W32.msb vb).
+   W32.bits2w (map W32.msb vb).
 
 op MOVEMASK_8u32 (v: W256.t) =
    let vb = W8u32.to_list v in
-   W64.bits2w (map W32.msb vb).
+   W32.bits2w (map W32.msb vb).
 
 op MOVEMASK_2u64 (v: W128.t) =
    let vb = W2u64.to_list v in
-   W64.bits2w (map W64.msb vb).
+   W32.bits2w (map W64.msb vb).
 
 op MOVEMASK_4u64 (v: W256.t) =
    let vb = W4u64.to_list v in
-   W64.bits2w (map W64.msb vb).
+   W32.bits2w (map W64.msb vb).
 
 (* ------------------------------------------------------------------- *)
 (*
