@@ -1,3 +1,14 @@
+
+require import AllCore List Int IntDiv Ring StdOrder.
+
+from Jasmin require import JModel.
+
+from JazzEC require import Array256 Array16 WArray32.
+from JazzEC require import WArray512.
+from JazzEC require import Array400 WArray800.
+
+
+require import NTT_AVX_Fq_basemul MLKEMFCLib.
 require import NTT_AVX_j.
 
 (*************)

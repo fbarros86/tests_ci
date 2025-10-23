@@ -1,3 +1,26 @@
+require import AllCore List Int IntDiv CoreMap Real Number Ring StdOrder BitEncoding.
+
+from Jasmin require import JModel.
+from JazzEC require import Array256 Array128  Array16.
+from JazzEC require import Array256 Array128 Array32 Array16 Array768 Array2304.
+
+require import MLKEMFCLib.
+require import MLKEM_PolyVec.
+require import NTT_Fq.
+require import AVX2_Ops.
+
+from CryptoSpecs require import GFq Rq Serialization VecMat Correctness768.
+import VecMat768 Serialization768.
+
+import MLKEM_PolyVec.
+import Zq IntOrder BitReverse.
+import PolyVec PolyMat.
+theory NTT_Avx2.
+
+
+from JazzEC require import Jkem768_avx2 Jkem768.
+require import NTT_AVX_Fq_ntt NTT_AVX_j_invtt.
+
 require import NTT_avx2_ntt.
 
 lemma poly_invntt_avx2_corr _r :

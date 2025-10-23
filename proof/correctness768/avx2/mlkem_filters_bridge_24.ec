@@ -1,5 +1,9 @@
 require import Mlkem_filters_bridge_48.
+require import AllCore List.
+from Jasmin require import JModel_x86.
+from JazzEC require import Array32 Array48 Array24 Array536 Array2048.
 
+from CryptoSpecs require import Correctness768.
 from JazzEC require import Array16.
 
 op sliceset_256_128_16 (a : W16.t Array256.t) (offset : int) (w : W128.t) : W16.t Array256.t =
