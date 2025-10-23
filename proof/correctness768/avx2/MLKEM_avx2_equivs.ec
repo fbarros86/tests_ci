@@ -10,7 +10,7 @@ from JazzEC require import Jkem768_avx2.
 require import MLKEM_PolyVec_avx2_prevec.
 require import MLKEM_Poly_avx2_prevec.
 require import NTT_avx2.
-require import Fq_avx2.
+require import Fqmul_avx2 __red_x16_avx2.
 require import Fq.
 require import NTT_Fq.
 require import MLKEM_Poly.

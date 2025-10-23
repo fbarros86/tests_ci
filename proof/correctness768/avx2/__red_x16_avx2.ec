@@ -308,3 +308,5 @@ have -> : Pr[Mprevec.red16x(r{m}, qx16{m}, vx16{m}) @ &m : true] = 1%r; last by 
 
 byphoare => //; apply barret_red16x_ll.
 qed.
+
+end Fq_avx2.
