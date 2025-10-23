@@ -15,13 +15,12 @@ import VecMat768 Serialization768.
 import MLKEM_PolyVec.
 import Zq IntOrder BitReverse.
 import PolyVec PolyMat.
-theory NTT_Avx2.
 
 
 from JazzEC require import Jkem768_avx2 Jkem768.
 require import NTT_AVX_Fq_basemul NTT_AVX_Fq_ntt NTT_AVX_j_invtt.
 
-require import NTT_avx2_ntt.
+require import NTT_avx2 NTT_avx2_ntt.
 
 lemma poly_invntt_avx2_corr _r :
   phoare [Jkem768_avx2.M._poly_invntt :
