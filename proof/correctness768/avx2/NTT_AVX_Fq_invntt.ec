@@ -1,4 +1,4 @@
-require import NTT_AVX_Fq_ntt.
+require import NTT_AVX_Fq_ntt NTT_AVX_Fq_basemul.
 require import AllCore List IntDiv Ring StdOrder BitEncoding.
 
 require import Fq NTT_Fq NTTAlgebra.
