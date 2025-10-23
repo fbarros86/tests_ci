@@ -8,7 +8,7 @@ from JazzEC require import Array400 WArray800.
 
 
 require import NTT_AVX_Fq_basemul MLKEMFCLib.
-require import NTT_AVX_j_ntt.
+require import NTT_AVX_j_ntt NTT_AVX_j.
 
 from CryptoSpecs require import GFq Correctness768.
 
