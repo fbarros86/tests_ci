@@ -1,0 +1,11 @@
+(tests
+  (libraries jasmin.jasmin)
+  (deps (glob_files_rec success/*))
+  (modules printing)
+  (names printing))
+
+(cram
+  (deps
+    ../jasminc
+    (glob_files_rec fail/warning/*)
+    (glob_files_rec fail/linter/*)))
