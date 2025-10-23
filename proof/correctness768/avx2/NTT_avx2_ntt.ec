@@ -15,12 +15,10 @@ import VecMat768 Serialization768.
 import MLKEM_PolyVec.
 import Zq IntOrder BitReverse.
 import PolyVec PolyMat.
-theory NTT_Avx2.
 
 require import NTT_avx2.
-
 from JazzEC require import Jkem768_avx2 Jkem768.
-require import NTT_AVX_Fq_ntt NTT_AVX_j_invtt.
+require import NTT_AVX_Fq_basemul NTT_AVX_Fq_ntt NTT_AVX_j_invtt.
 
 lemma perm_ntt_nttpackE ['a] (p: 'a Array256.t):
   perm_ntt NTT_AVX_Fq_basemul.perm_nttpack128 p = nttpack p.
