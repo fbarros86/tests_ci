@@ -1,28 +1,66 @@
 name: EasyCrypt
+
 permissions:
   contents: read
+
 on:
   push:
     branches:
       - main
+
 env:
   NIXPKGS_ALLOW_UNFREE: 1
   ECRJOBS: 4
 
 jobs:
-    test_proofs:
-        name: Check Proofs
-        runs-on: ubuntu-latest
-        strategy:
-          fail-fast: false
-          matrix:
-            size: [ '768', '1024' ]
-            dir: [ 'ref', 'avx2' ]
-            # type: [ 'correctness', 'safety' ] --> to add later
-        steps:
-        - uses: actions/checkout@v4
-        - uses: cachix/install-nix-action@v31
-          with:
-            nix_path: nixpkgs=channel:nixos-unstable
-        - run: nix-shell --run 'easycrypt why3config'
-        - run: nix-shell --run "make checkec_${{matrix.size}}_${{matrix.dir}}"
+  test_proofs:
+    name: Check Proofs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        size: [ '768', '1024' ]
+        dir: [ 'ref', 'avx2' ]
+        # type: [ 'correctness', 'safety' ]  # to add later
+
+    steps:
+      # 1. Checkout source
+      - uses: actions/checkout@v4
+
+      # 2. Install Nix
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      # 3. Enable Cachix cache for Nix builds
+      #    (Create a cache at https://cachix.org and add CACHIX_AUTH_TOKEN to repo secrets)
+      - uses: cachix/cachix-action@v14
+        with:
+          name: your-cachix-cache-name
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      # 4. Cache Why3 configuration to avoid recomputation
+      - name: Cache Why3 config
+        uses: actions/cache@v4
+        with:
+          path: ~/.why3.conf
+          key: why3-${{ runner.os }}-${{ hashFiles('**/*.ec') }}
+          restore-keys: |
+            why3-${{ runner.os }}-
+
+      # 5. Cache EasyCrypt proof build outputs (optional but useful if make stores .eco/.vo)
+      - name: Cache proof build outputs
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: proofs-${{ matrix.size }}-${{ matrix.dir }}-${{ hashFiles('**/*.ec', '**/Makefile') }}
+          restore-keys: |
+            proofs-${{ matrix.size }}-${{ matrix.dir }}-
+
+      # 6. Initialize Why3
+      - name: Configure Why3
+        run: nix-shell --run 'easycrypt why3config'
+
+      # 7. Run EasyCrypt proofs
+      - name: Check EasyCrypt proofs
+        run: nix-shell --run "make checkec_${{ matrix.size }}_${{ matrix.dir }}"
