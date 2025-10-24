@@ -11,7 +11,7 @@ require import NTT_avx2_ntt NTT_avx2.
 
 require import MLKEM_keccak_avx2.
 
-require import MLKEM_genmatrix_avx2.
+require import MLKEM_genmatrix_avx2 MLKEM_ntt_pack_avx2.
 
 import NTT_Avx2.
 
