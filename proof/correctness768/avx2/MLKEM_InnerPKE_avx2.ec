@@ -13,13 +13,14 @@ require import MLKEM_PolyVec_avx2_proof.
 require import MLKEM_PolyVec_avx2_vec.
 require import MLKEMFCLib.
 from JazzEC require import Jkem768_avx2 Jkem768.
-require import NTT_avx2_invntt NTT_AVX_j_invtt.
-require import Fq NTT_Fq NTT_AVX_Fq_ntt.
+require import NTT_avx2_invntt NTT_avx2_ntt NTT_avx2.
+require import NTT_AVX_j_invtt NTT_AVX_j_ntt NTT_AVX_j.
+require import Fq NTT_Fq NTT_AVX_Fq_ntt NTT_AVX_Fq_invntt NTT_AVX_Fq_basemul.
 require import MLKEM_avx2_equivs.
 require import Montgomery16.
 require import AVX2_Ops.
 require import MLKEM_keccak_ref MLKEM_keccak_avx2.
-require import MLKEM_genmatrix_avx2.
+require import MLKEM_ntt_pack_avx2 MLKEM_genmatrix_avx2 MLKEM_genmatrix_avx2'.
 
 from CryptoSpecs require import GFq Rq Sampling Serialization Symmetric VecMat InnerPKE768 MLKEM768 Correctness768.
 
