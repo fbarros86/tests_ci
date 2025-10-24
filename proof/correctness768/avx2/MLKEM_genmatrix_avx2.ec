@@ -7,6 +7,8 @@ from JazzEC require import Array2 Array8 Array16 Array25 Array32 Array33 Array12
 
 require import MLKEM_InnerPKE NTT_avx2_invntt MLKEMFCLib AVX2_Ops NTT_AVX_Fq_ntt MLKEM_Poly_avx2_vec.
 
+require import NTT_avx2_ntt NTT_avx2.
+
 require import MLKEM_keccak_avx2.
 
 import NTT_Avx2.
