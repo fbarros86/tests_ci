@@ -20,6 +20,8 @@ require import NTT_avx2 NTT_AVX_j NTT_AVX_j_ntt.
 from JazzEC require import Jkem768_avx2 Jkem768.
 require import NTT_AVX_Fq_basemul NTT_AVX_Fq_ntt NTT_AVX_j_invtt.
 
+import NTT_Avx2.
+
 lemma perm_ntt_nttpackE ['a] (p: 'a Array256.t):
   perm_ntt NTT_AVX_Fq_basemul.perm_nttpack128 p = NTT_Avx2.nttpack p.
 proof.

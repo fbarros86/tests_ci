@@ -6,6 +6,12 @@ from JazzEC require import Array32 Array48 Array24 Array536 Array2048.
 from CryptoSpecs require import Correctness768.
 from JazzEC require import Array16.
 
+from JazzEC require import WArray512 Array40 Array256 Array56 WArray536 WArray2048.
+require import IntDiv.
+
+require import Mlkem_filters_bindings.
+require import Mlkem_filters.
+
 op sliceset_256_128_16 (a : W16.t Array256.t) (offset : int) (w : W128.t) : W16.t Array256.t =
   Array256.init
     (fun (i : int) =>

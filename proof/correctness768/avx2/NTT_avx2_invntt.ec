@@ -18,7 +18,7 @@ import PolyVec PolyMat.
 
 
 from JazzEC require import Jkem768_avx2 Jkem768.
-require import NTT_AVX_Fq_basemul NTT_AVX_Fq_ntt NTT_AVX_j_invtt NTT_AVX_j_ntt NTT_AVX_j.
+require import NTT_AVX_Fq_basemul NTT_AVX_Fq_ntt NTT_AVX_Fq_invntt NTT_AVX_j_invtt NTT_AVX_j_ntt NTT_AVX_j.
 
 require import NTT_avx2 NTT_avx2_ntt.
 
