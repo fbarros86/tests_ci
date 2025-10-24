@@ -5,7 +5,7 @@ from Jasmin require import JModel.
 from JazzEC require import WArray512 WArray256 WArray128 WArray8 WArray2 WArray32.
 from JazzEC require import Array2 Array8 Array16 Array25 Array32 Array33 Array128 Array136 Array768 Array960 Array1024 Array1088 Array2304 Array2144 Array536 Array256.
 
-require import MLKEM_InnerPKE NTT_avx2_invntt MLKEMFCLib AVX2_Ops NTT_AVX_Fq_ntt MLKEM_Poly_avx2_vec.
+require import MLKEM_InnerPKE NTT_avx2_invntt MLKEMFCLib AVX2_Ops NTT_AVX_Fq_ntt NTT_AVX_Fq_basemul NTT_AVX_Fq_invntt MLKEM_Poly_avx2_vec.
 
 require import NTT_avx2_ntt NTT_avx2.
 
