@@ -12,6 +12,9 @@ require import IntDiv.
 require import Mlkem_filters_bindings.
 require import Mlkem_filters.
 
+from JazzEC require import Jkem768_avx2.
+
+
 op sliceset_256_128_16 (a : W16.t Array256.t) (offset : int) (w : W128.t) : W16.t Array256.t =
   Array256.init
     (fun (i : int) =>

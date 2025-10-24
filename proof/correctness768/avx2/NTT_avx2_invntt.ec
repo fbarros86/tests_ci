@@ -43,7 +43,7 @@ qed.
 lemma nttpack_subarray768_k (r : 'a Array768.t) k :
   k = 256 || k = 512 =>
   NTT_Avx2.nttpack (Array256.init (fun i => r.[k+i])) = Array256.init (fun i => (NTT_Avx2.nttpackv r).[k+i]).
-move => Hk. rewrite /NTT_Avx2.nttpack tP => /> i Hi1 Hi2. rewrite !initiE /= 1..2:/#. rewrite initiE //= /NTT_Avx2.nttpack 1:/#. rewrite initiE //=. rewrite nttpack_inbounds //. pose a := nttpack_idx.[i].
+move => Hk. rewrite /NTT_Avx2.nttpack tP => /> i Hi1 Hi2. rewrite !initiE /= 1..2:/#. rewrite initiE //= /NTT_Avx2.nttpack 1:/#. rewrite initiE //=. rewrite NTT_Avx2.nttpack_inbounds //. pose a := nttpack_idx.[i].
 case Hk => />.
  + rewrite ifF 1:/#. rewrite ifT 1:/#. rewrite /subarray256 initiE //= initiE //=. rewrite NTT_Avx2.nttpack_inbounds //. 
  + rewrite ifF 1:/#. rewrite ifF 1:/#. rewrite /subarray256 initiE //= initiE //=. rewrite NTT_Avx2.nttpack_inbounds //. 
@@ -88,7 +88,7 @@ move => [#] H5 H6 r0 [#] Hr0 H7.
 rewrite !land_foo.
 do split. 
  + rewrite nttpack_subarray768_k // !lift_array_256_768_k 1..2:/# -H_r.
-   rewrite tP => />i Hi1 Hi2; rewrite !initiE //= /NTT_Avx2.nttpackv /lift_array768 /map !initiE //= 1..2:/# !initiE //= 1:/# ifF 1:/# ifF 1:/# ifF 1:/# ifF 1:/#  /subarray256 /nttpack !initiE //=; pose a:= nttpack_idx.[i]; rewrite !initiE //= /a; smt(Array768.initiE nttpack_inbounds). 
+   rewrite tP => />i Hi1 Hi2; rewrite !initiE //= /NTT_Avx2.nttpackv /lift_array768 /map !initiE //= 1..2:/# !initiE //= 1:/# ifF 1:/# ifF 1:/# ifF 1:/# ifF 1:/#  /subarray256 /nttpack !initiE //=; pose a:= nttpack_idx.[i]; rewrite !initiE //= /a; smt(Array768.initiE NTT_Avx2.nttpack_inbounds). 
 
  +  rewrite /signed_bound_ => i Hi; rewrite !initiE /=  1:/# !initiE //= 1:/# ifF 1:/# !initiE //= 1:/# ifF 1:/#; move :Hb; rewrite /signed_bound768_cxq => Hb; move :(Hb (512+i)); smt().
 
