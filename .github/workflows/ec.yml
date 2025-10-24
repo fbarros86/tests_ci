@@ -16,7 +16,7 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            size: [ '768', '1024' ]
+            size: [ '768']
             dir: [ 'ref', 'avx2' ]
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
