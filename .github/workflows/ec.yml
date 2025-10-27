@@ -15,9 +15,9 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
           fail-fast: false
-          matrix:
-            size: [ '768','1024']
-            dir: [ 'ref', 'avx2' ]
+          # matrix:
+          #   size: [ '768','1024']
+          #   dir: [ 'ref', 'avx2' ]
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
         - uses: actions/checkout@v4
@@ -25,4 +25,5 @@ jobs:
           with:
             nix_path: nixpkgs=channel:nixos-unstable
         - run: nix-shell --run 'easycrypt why3config'
+        # - run: nix-shell --run "make checkec_${{matrix.size}}_${{matrix.dir}}"
         - run: nix-shell --run "make checkec_768_avx2"
