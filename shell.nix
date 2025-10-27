@@ -10,6 +10,9 @@ with pkgs;
 
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
+    preBuild = ''
+      export HOME=$PWD
+    '';
     src = fetchFromGitLab {
       owner = "jasmin-lang";
       repo = "jasmin-compiler";
@@ -78,7 +81,6 @@ mkShell ({
   JASMINPATH="Keccak=${formosa-keccak}/src/amd64";
 } // lib.optionalAttrs full {
   packages = [
-    ec
     cvc5
     z3
   ];
