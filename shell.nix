@@ -53,6 +53,9 @@ let
       rev = ecVersion;
       hash = "sha256-OhwCt7VI+nX2+M5ftXvkRsNZSqMH0cKJtKD+8JZL4RI=";
     };
+    preBuild = ''
+      export HOME=$PWD
+    '';
     postPatch = ''
       substituteInPlace dune-project \
         --replace-warn '(name easycrypt)' '(name easycrypt)(version ${ecVersion})'
@@ -64,7 +67,6 @@ let
     ocamlPackages = oc;
     why3 = why;
   };
-  altergo = callPackage ./config/alt-ergo.nix { ocamlPackages = oc; } ;
 in
 
 let mkECvar = lib.strings.concatMapStringsSep ";" ({key, val}: "${key}:${val}"); in
@@ -77,7 +79,6 @@ mkShell ({
 } // lib.optionalAttrs full {
   packages = [
     ec
-    altergo
     cvc5
     z3
   ];
