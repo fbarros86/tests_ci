@@ -46,6 +46,8 @@ from JazzEC require import WArray1088 WArray2048.
 require import Bindings BitEncoding.
 import BitChunking BS2Int.
 
+import MLKEM_avx2_equivs_frombytes.
+
 
 op tobytes_circuit(a : W16.t) : W12.t = 
    if (a \ult W16.of_int 3329) then truncateu12 a else truncateu12 (W16_sub a (W16.of_int 3329)).  

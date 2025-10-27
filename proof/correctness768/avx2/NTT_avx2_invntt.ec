@@ -24,6 +24,9 @@ require import NTT_avx2 NTT_avx2_ntt.
 
 import NTT_Avx2.
 
+import KMatrix.
+import Vector.
+
 lemma poly_invntt_avx2_corr _r :
   phoare [Jkem768_avx2.M._poly_invntt :
     lift_array256 (NTT_Avx2.nttpack rp) = lift_array256 _r /\ signed_bound_cxq rp 0 256 4 ==>
