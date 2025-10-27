@@ -16,7 +16,23 @@ from JazzEC require import Jkem768_avx2 Jkem768.
 require import NTT_avx2_invntt NTT_avx2_ntt NTT_avx2.
 require import NTT_AVX_j_invtt NTT_AVX_j_ntt NTT_AVX_j.
 require import Fq NTT_Fq NTT_AVX_Fq_ntt NTT_AVX_Fq_invntt NTT_AVX_Fq_basemul.
-require import MLKEM_avx2_equivs.
+require import 
+  MLKEM_avx2_equivs_basemul_add2 
+  MLKEM_avx2_equivs_compress 
+  MLKEM_avx2_equivs_compress2 
+  MLKEM_avx2_equivs_csubq 
+  MLKEM_avx2_equivs_decompress 
+  MLKEM_avx2_equivs_decompress2 
+  MLKEM_avx2_equivs_frombytes 
+  MLKEM_avx2_equivs_frommont_reduce 
+  MLKEM_avx2_equivs_frommsg 
+  MLKEM_avx2_equivs_invntt 
+  MLKEM_avx2_equivs_ntt 
+  MLKEM_avx2_equivs_pointwise 
+  MLKEM_avx2_equivs_polysub 
+  MLKEM_avx2_equivs_polyvecadd2_reduce 
+  MLKEM_avx2_equivs_tobytes 
+  MLKEM_avx2_equivs_tomsg.
 require import Montgomery16.
 require import AVX2_Ops.
 require import MLKEM_keccak_ref MLKEM_keccak_avx2.
