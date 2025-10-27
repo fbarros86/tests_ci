@@ -26,6 +26,7 @@ jobs:
             nix_path: nixpkgs=channel:nixos-unstable
             extra_nix_config: |
                 filter-syscalls = false 
+                sandbox = false
         - run: nix-shell --run 'easycrypt why3config'
         # - run: nix-shell --run "make checkec_${{matrix.size}}_${{matrix.dir}}"
         - run: nix-shell --run "make checkec_768_avx2"
