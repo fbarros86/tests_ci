@@ -44,6 +44,7 @@ let
     ideSupport = false;
     coqPackages = { coq = null; flocq = null; };
   };
+  bitwuzla = callPackage ./config/bitwuzla.nix { inherit (oc) buildDunePackage zarith; };
   ecVersion = "ae9418da46b17fef73156599b1ecac72b7f4abaa";
   ec = (easycrypt.overrideAttrs (o: {
     src = fetchFromGitHub {
@@ -57,12 +58,13 @@ let
         --replace-warn '(name easycrypt)' '(name easycrypt)(version ${ecVersion})'
     '';
     buildInputs = o.buildInputs ++ (with oc; [
-      hex iter progress ppx_deriving_yojson pcre2 
+      bitwuzla hex iter progress ppx_deriving_yojson pcre2 
     ]);
   })).override {
     ocamlPackages = oc;
     why3 = why;
   };
+  altergo = callPackage ./config/alt-ergo.nix { ocamlPackages = oc; } ;
 in
 
 let mkECvar = lib.strings.concatMapStringsSep ";" ({key, val}: "${key}:${val}"); in
@@ -74,7 +76,7 @@ mkShell ({
   JASMINPATH="Keccak=${formosa-keccak}/src/amd64";
 } // lib.optionalAttrs full {
   packages = [
-    ec
+    altergo
     cvc5
     z3
   ];
