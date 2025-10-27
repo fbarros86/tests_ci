@@ -8,6 +8,9 @@ on:
 env:
   NIXPKGS_ALLOW_UNFREE: 1
   ECRJOBS: 2
+  HOME: /tmp   
+  NIX_CONFIG: |
+    sandbox = false     # no sandboxing in Docker
 
 jobs:
     test_proofs:
