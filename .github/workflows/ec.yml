@@ -15,7 +15,7 @@ env:
 jobs:
     test_proofs:
         name: Check Proofs
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
         strategy:
           fail-fast: false
           # matrix:
