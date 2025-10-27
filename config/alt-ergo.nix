@@ -18,7 +18,7 @@ let ocplib-simplex =
       sha256 = "09niyidrjzrj8g1qwx4wgsdf5m6cwrnzg7zsgala36jliic4di60";
     };
 
-    preBuild = ''
+    preConfigure =  ''
       export HOME=$PWD
     '';
 
@@ -38,7 +38,7 @@ let
   version = "2.4.3";
 
   configureScript = "ocaml unix.cma configure.ml";
-  preBuild = ''
+  preConfigure = ''
       export HOME=$PWD
     '';
 
@@ -55,7 +55,7 @@ let alt-ergo-lib = ocamlPackages.buildDunePackage rec {
   inherit version src configureScript;
   configureFlags = [ pname ];
   nativeBuildInputs = [ which ];
-   preBuild = ''
+   preConfigure = ''
       export HOME=$PWD
     '';
   buildInputs = with ocamlPackages; [ dune-configurator ];
@@ -66,7 +66,7 @@ let alt-ergo-parsers = ocamlPackages.buildDunePackage rec {
   pname = "alt-ergo-parsers";
   inherit version src configureScript;
   configureFlags = [ pname ];
-   preBuild = ''
+   preConfigure = ''
       export HOME=$PWD
     '';
   nativeBuildInputs = [ which ocamlPackages.menhir ];
@@ -81,7 +81,7 @@ ocamlPackages.buildDunePackage {
 
   nativeBuildInputs = [ which ocamlPackages.menhir ];
   buildInputs = [ alt-ergo-parsers ocamlPackages.cmdliner ];
- preBuild = ''
+ preConfigure = ''
       export HOME=$PWD
     '';
   meta = {

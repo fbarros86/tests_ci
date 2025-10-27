@@ -10,6 +10,9 @@ with pkgs;
 
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
+    preConfigure = ''
+      export HOME=$PWD
+    '';
     src = fetchFromGitLab {
       owner = "jasmin-lang";
       repo = "jasmin-compiler";
@@ -56,6 +59,9 @@ let
     postPatch = ''
       substituteInPlace dune-project \
         --replace-warn '(name easycrypt)' '(name easycrypt)(version ${ecVersion})'
+    '';
+    preConfigure = ''
+      export HOME=$PWD
     '';
     buildInputs = o.buildInputs ++ (with oc; [
       bitwuzla hex iter progress ppx_deriving_yojson pcre2 
