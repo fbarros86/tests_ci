@@ -46,7 +46,7 @@ from JazzEC require import WArray1088 WArray2048.
 require import Bindings BitEncoding.
 import BitChunking BS2Int.
 
-import MLKEM_avx2_equivs_basemul_add2.
+require import MLKEM_avx2_equivs_basemul_add2.
 
 equiv pointwiseequiv : 
  Jkem768_avx2.M.__polyvec_pointwise_acc ~  Jkem768.M.__polyvec_pointwise_acc :
