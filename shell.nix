@@ -82,6 +82,7 @@ mkShell ({
   JASMINPATH="Keccak=${formosa-keccak}/src/amd64";
 } // lib.optionalAttrs full {
   packages = [
+    easycrypt
     altergo
     cvc5
     z3
