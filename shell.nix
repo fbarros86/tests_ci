@@ -10,9 +10,6 @@ with pkgs;
 
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
-    preBuild = ''
-      export HOME=$PWD
-    '';
     src = fetchFromGitLab {
       owner = "jasmin-lang";
       repo = "jasmin-compiler";
@@ -47,7 +44,6 @@ let
     ideSupport = false;
     coqPackages = { coq = null; flocq = null; };
   };
-  bitwuzla = callPackage ./config/bitwuzla.nix { inherit (oc) buildDunePackage zarith; };
   ecVersion = "ae9418da46b17fef73156599b1ecac72b7f4abaa";
   ec = (easycrypt.overrideAttrs (o: {
     src = fetchFromGitHub {
@@ -56,15 +52,12 @@ let
       rev = ecVersion;
       hash = "sha256-OhwCt7VI+nX2+M5ftXvkRsNZSqMH0cKJtKD+8JZL4RI=";
     };
-    preBuild = ''
-      export HOME=$PWD
-    '';
     postPatch = ''
       substituteInPlace dune-project \
         --replace-warn '(name easycrypt)' '(name easycrypt)(version ${ecVersion})'
     '';
     buildInputs = o.buildInputs ++ (with oc; [
-      bitwuzla hex iter progress ppx_deriving_yojson pcre2 
+      hex iter progress ppx_deriving_yojson pcre2 
     ]);
   })).override {
     ocamlPackages = oc;
@@ -81,6 +74,7 @@ mkShell ({
   JASMINPATH="Keccak=${formosa-keccak}/src/amd64";
 } // lib.optionalAttrs full {
   packages = [
+    ec
     cvc5
     z3
   ];
