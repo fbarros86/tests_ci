@@ -8,6 +8,9 @@ on:
 env:
   NIXPKGS_ALLOW_UNFREE: 1
   ECRJOBS: 2
+  HOME: /root
+  NIX_CONFIG: |
+    sandbox = false
 
 jobs:
     test_proofs:
@@ -24,6 +27,7 @@ jobs:
         - uses: cachix/install-nix-action@v31
           with:
             nix_path: nixpkgs=channel:nixos-unstable
-        - run: nix-shell --run 'easycrypt why3config'
+        - run: export HOME=/root
+        - run: nix-shell --option sandbox false --run 'easycrypt why3config'
         # - run: nix-shell --run "make checkec_${{matrix.size}}_${{matrix.dir}}"
-        - run: nix-shell --run "make checkec_768_avx2"
+        - run: nix-shell --option sandbox false --run "make checkec_768_avx2"
