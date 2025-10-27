@@ -46,7 +46,7 @@ from JazzEC require import WArray1088 WArray2048.
 require import Bindings BitEncoding.
 import BitChunking BS2Int.
 
-import MLKEM_avx2_equivs_frombytes.
+require import MLKEM_avx2_equivs_frombytes.
 
 
 op tobytes_circuit(a : W16.t) : W12.t = 

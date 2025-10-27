@@ -46,6 +46,8 @@ from JazzEC require import WArray1088 WArray2048.
 require import Bindings BitEncoding.
 import BitChunking BS2Int.
 
+require import MLKEM_avx2_equivs_csubq.
+
 op compress10_circuit(a : W16.t) : W10.t = 
    if (a \ult W16.of_int 3329) then  
    truncate64_10 (srl_64 ((sll_64 (zeroextu64 a) (W64.of_int 10) + W64.of_int 1665) * W64.of_int 1290167) (W64.of_int 32))
