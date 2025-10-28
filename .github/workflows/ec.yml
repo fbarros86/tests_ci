@@ -8,11 +8,13 @@ on:
 env:
   NIXPKGS_ALLOW_UNFREE: 1
   ECRJOBS: 2
+  NIX_CONFIG: |
+    sandbox = false
 
 jobs:
     test_proofs:
         name: Check Proofs
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         strategy:
           fail-fast: false
           # matrix:
