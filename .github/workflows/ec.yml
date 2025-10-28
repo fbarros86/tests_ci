@@ -8,9 +8,6 @@ on:
 env:
   NIXPKGS_ALLOW_UNFREE: 1
   ECRJOBS: 2
-  HOME: /root
-  NIX_CONFIG: |
-    sandbox = false
 
 jobs:
     test_proofs:
