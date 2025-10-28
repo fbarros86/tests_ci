@@ -47,6 +47,7 @@ let
     ideSupport = false;
     coqPackages = { coq = null; flocq = null; };
   };
+  bitwuzla = callPackage ./config/bitwuzla.nix { inherit (oc) buildDunePackage zarith; };
   ecVersion = "ae9418da46b17fef73156599b1ecac72b7f4abaa";
   ec = (easycrypt.overrideAttrs (o: {
     preConfigure = ''
@@ -63,7 +64,7 @@ let
         --replace-warn '(name easycrypt)' '(name easycrypt)(version ${ecVersion})'
     '';
     buildInputs = o.buildInputs ++ (with oc; [
-       hex iter progress ppx_deriving_yojson pcre2 
+      bitwuzla hex iter progress ppx_deriving_yojson pcre2 
     ]);
   })).override {
     ocamlPackages = oc;
