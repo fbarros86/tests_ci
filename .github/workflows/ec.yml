@@ -7,9 +7,8 @@ on:
       - main
 env:
   NIXPKGS_ALLOW_UNFREE: 1
-  ECRJOBS: 1
-  NIX_CONFIG: |
-    sandbox = false
+  ECRJOBS: 2
+
 
 jobs:
     test_proofs:
