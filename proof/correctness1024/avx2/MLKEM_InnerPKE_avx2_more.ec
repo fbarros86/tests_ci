@@ -49,6 +49,10 @@ import MLKEM_PolyvecAVX.
 import MLKEM_PolyAVXVec.
 import NTT_Avx2.
 
+import InnerPKE1024.
+import WArray128.
+require import W8extra.
+
 
 lemma mlkem_correct_enc_1_avx2 _pkp : 
    equiv [Jkem1024_avx2.M.__indcpa_enc ~ InnerPKE1024.enc_derand: 

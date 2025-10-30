@@ -27,6 +27,7 @@ require import Mlkem_filters_bridge_24.
 require import Mlkem_filters_bridge_48.
 
 require import MLKEM_genmatrix_avx2.
+require import MLKEM_ntt_pack_avx2.
 
 abbrev coeff2u16 x = W16.of_int (Zq.asint x).
 abbrev coeffL2u16L = List.map coeff2u16.
