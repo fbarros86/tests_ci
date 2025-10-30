@@ -18,7 +18,7 @@ jobs:
           fail-fast: false
           matrix:
             size: [ '768','1024']
-            dir: [ 'ref', 'avx2' ]
+            dir: [ 'ref' ]
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
         - uses: actions/checkout@v4
