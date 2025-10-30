@@ -16,6 +16,10 @@ theory Fq_avx2.
 
 from JazzEC require import Jkem768_avx2.
 
+require import Red_x16_avx2.
+
+import Fq_avx2_red.
+
 (*
 import MLKEM.
 import MLKEM_Poly.
@@ -24,8 +28,6 @@ import Zq.
 import ZModP.
 *)
 
-op lift_array16 (p: W16.t Array16.t) =
-  Array16.map (fun x => (W16.to_sint x)) p.
 
 module MLKEM_avx2_encdec = {
   proc __fqmul_x16 (a b: W16.t Array16.t) : W16.t Array16.t = {

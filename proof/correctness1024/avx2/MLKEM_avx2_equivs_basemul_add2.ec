@@ -1,12 +1,12 @@
 require import AllCore List Int IntDiv CoreMap Real Number.
 
 from Jasmin require import JModel.
-from JazzEC require import Array1152 Array1088 Array960 Array1410 Array768 Array400 Array384 Array256 Array160 Array128 Array64 Array32 Array16 Array4 Array8 Array2.
-from JazzEC require import WArray512 WArray128 WArray384 WArray32 WArray16 WArray1410 WArray160 WArray960 WArray1152 WArray1536.
+from JazzEC require import Array1536 Array1568 Array1408 Array1410 Array1024 Array400 Array384 Array256 Array160 Array128 Array64 Array32 Array16 Array4 Array8 Array2.
+from JazzEC require import WArray512 WArray384 WArray32 WArray16 WArray1410 WArray160.
 
 require import AVX2_Ops W16extra.
-from JazzEC require import Jkem768.
-from JazzEC require import Jkem768_avx2.
+from JazzEC require import Jkem1024.
+from JazzEC require import Jkem1024_avx2.
 require import MLKEM_PolyVec_avx2_prevec.
 require import MLKEM_Poly_avx2_prevec.
 require import NTT_avx2 NTT_avx2_ntt NTT_avx2_invntt.
@@ -23,7 +23,7 @@ require import MLKEM_PolyVec_avx2_vec.
 require import MLKEM_InnerPKE.
 require import MLKEMFCLib.
 
-import GFq Rq Symmetric Symmetric768 Serialization Serialization768 Sampling VecMat VecMat768 InnerPKE768 MLKEM768 Correctness768 Fq SignedReductions.
+import GFq Rq Symmetric Symmetric1024 Serialization Serialization1024 Sampling VecMat VecMat1024 InnerPKE1024 MLKEM1024 Correctness1024 Fq SignedReductions.
 
 import Zq.
 import ZModP.
@@ -42,17 +42,16 @@ require import Bindings.
 
 import KMatrix Vector.
 
-from JazzEC require import WArray1088 WArray2048.
+from JazzEC require import WArray1568 WArray2048.
 require import Bindings BitEncoding.
 import BitChunking BS2Int.
 
-
 import Zq. 
-
 require import NTT_AVX_j_invntt NTT_AVX_j_ntt NTT_AVX_j.
 
+
 equiv basemulequiv : 
- Jkem768_avx2.M._poly_basemul ~Jkem768.M._poly_basemul :
+ Jkem1024_avx2.M._poly_basemul ~Jkem1024.M._poly_basemul :
     lift_array256 ap{1} = nttunpack (lift_array256 ap{2}) /\
     lift_array256 bp{1} = nttunpack (lift_array256 bp{2}) /\
     signed_bound_cxq ap{1} 0 256 2 /\  
@@ -92,7 +91,7 @@ lemma addequiv  (ab1 bb1 ab2 bb2 : int):
     0 <= ab2 && ab2 <= 6 =>
     0 <= bb1 && bb1 <= 3 =>
     0 <= bb2 && bb2 <= 3 =>
-    equiv [Jkem768_avx2.M._poly_add2 ~Jkem768.M._poly_add2 :
+    equiv [Jkem1024_avx2.M._poly_add2 ~Jkem1024.M._poly_add2 :
       lift_array256 rp{1} = lift_array256 (nttunpack rp{2}) /\
       lift_array256 bp{1} = lift_array256 (nttunpack bp{2}) /\
       signed_bound_cxq rp{2} 0 256 ab2 /\ 
@@ -143,7 +142,7 @@ qed.
 lemma addequiv_noperm  (ab bb : int):
     0 <= ab && ab <= 6 =>
     0 <= bb && bb <= 3 =>
-    equiv [Jkem768_avx2.M._poly_add2 ~Jkem768.M._poly_add2 :
+    equiv [Jkem1024_avx2.M._poly_add2 ~Jkem1024.M._poly_add2 :
       lift_array256 rp{1} = lift_array256 ( rp{2}) /\
       lift_array256 bp{1} = lift_array256 ( bp{2}) /\
       signed_bound_cxq rp{2} 0 256 ab /\ 
@@ -181,5 +180,3 @@ rewrite /lift_array256 tP => k kb.
 rewrite !mapiE //=.
 rewrite H7 // H9 /#.
 qed.
-
-
