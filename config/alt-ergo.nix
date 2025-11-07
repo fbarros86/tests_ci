@@ -21,6 +21,12 @@ let ocplib-simplex =
     preConfigure =  ''
       export HOME=$PWD
     '';
+        preBuild = ''
+      export HOME=$PWD
+    '';
+    preInstall = ''
+      export HOME=$PWD
+    '';
 
     nativeBuildInputs = [ autoreconfHook ocaml findlib ];
 
@@ -41,6 +47,12 @@ let
   preConfigure = ''
       export HOME=$PWD
     '';
+      preBuild = ''
+      export HOME=$PWD
+    '';
+    preInstall = ''
+      export HOME=$PWD
+    '';
 
   src = fetchFromGitHub {
     owner = "OCamlPro";
@@ -58,6 +70,12 @@ let alt-ergo-lib = ocamlPackages.buildDunePackage rec {
    preConfigure = ''
       export HOME=$PWD
     '';
+        preBuild = ''
+      export HOME=$PWD
+    '';
+    preInstall = ''
+      export HOME=$PWD
+    '';
   buildInputs = with ocamlPackages; [ dune-configurator ];
   propagatedBuildInputs = with ocamlPackages; [ dune-build-info num ocplib-simplex seq stdlib-shims zarith ];
 }; in
@@ -67,6 +85,12 @@ let alt-ergo-parsers = ocamlPackages.buildDunePackage rec {
   inherit version src configureScript;
   configureFlags = [ pname ];
    preConfigure = ''
+      export HOME=$PWD
+    '';
+        preBuild = ''
+      export HOME=$PWD
+    '';
+    preInstall = ''
       export HOME=$PWD
     '';
   nativeBuildInputs = [ which ocamlPackages.menhir ];
@@ -82,6 +106,12 @@ ocamlPackages.buildDunePackage {
   nativeBuildInputs = [ which ocamlPackages.menhir ];
   buildInputs = [ alt-ergo-parsers ocamlPackages.cmdliner ];
  preConfigure = ''
+      export HOME=$PWD
+    '';
+        preBuild = ''
+      export HOME=$PWD
+    '';
+    preInstall = ''
       export HOME=$PWD
     '';
   meta = {
