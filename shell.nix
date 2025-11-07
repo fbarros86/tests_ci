@@ -83,6 +83,9 @@ in
 let mkECvar = lib.strings.concatMapStringsSep ";" ({key, val}: "${key}:${val}"); in
 
 mkShell ({
+  shellHook = ''
+    export HOME=$PWD
+  '';
   JASMINC = "${jasmin.bin}/bin/jasminc";
   JASMINCT = "${jasmin.bin}/bin/jasmin-ct";
   JASMIN2EC = "${jasmin.bin}/bin/jasmin2ec";
