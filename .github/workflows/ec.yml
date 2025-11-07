@@ -7,9 +7,10 @@ on:
       - main
 env:
   NIXPKGS_ALLOW_UNFREE: 1
-  ECRJOBS: 2
+  ECRJOBS: 1
   NIX_CONFIG: |
     sandbox = false
+  HOME: /root
 
 
 jobs:
