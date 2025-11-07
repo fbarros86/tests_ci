@@ -10,7 +10,6 @@ env:
   ECRJOBS: 1
   NIX_CONFIG: |
     sandbox = false
-  HOME: /root
 
 
 jobs:
@@ -28,5 +27,6 @@ jobs:
         - uses: cachix/install-nix-action@v31
           with:
             nix_path: nixpkgs=channel:nixos-unstable
+        - run: export HOME=/root
         - run: nix-shell --option sandbox false --run 'easycrypt why3config'
         - run: nix-shell --option sandbox false --run "make checkec_${{matrix.size}}_${{matrix.dir}}"
