@@ -11,13 +11,13 @@ with pkgs;
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
     preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     src = fetchFromGitLab {
       owner = "jasmin-lang";
@@ -57,13 +57,13 @@ let
   ecVersion = "ae9418da46b17fef73156599b1ecac72b7f4abaa";
   ec = (easycrypt.overrideAttrs (o: {
     preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
         preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     src = fetchFromGitHub {
       owner = "EasyCrypt";

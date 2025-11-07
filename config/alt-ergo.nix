@@ -19,13 +19,13 @@ let ocplib-simplex =
     };
 
     preConfigure =  ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
         preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
 
     nativeBuildInputs = [ autoreconfHook ocaml findlib ];
@@ -45,13 +45,13 @@ let
 
   configureScript = "ocaml unix.cma configure.ml";
   preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
       preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
 
   src = fetchFromGitHub {
@@ -68,13 +68,13 @@ let alt-ergo-lib = ocamlPackages.buildDunePackage rec {
   configureFlags = [ pname ];
   nativeBuildInputs = [ which ];
    preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
         preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
   buildInputs = with ocamlPackages; [ dune-configurator ];
   propagatedBuildInputs = with ocamlPackages; [ dune-build-info num ocplib-simplex seq stdlib-shims zarith ];
@@ -85,13 +85,13 @@ let alt-ergo-parsers = ocamlPackages.buildDunePackage rec {
   inherit version src configureScript;
   configureFlags = [ pname ];
    preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
         preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
   nativeBuildInputs = [ which ocamlPackages.menhir ];
   propagatedBuildInputs = [ alt-ergo-lib ] ++ (with ocamlPackages; [ camlzip psmt2-frontend ]);
@@ -106,13 +106,13 @@ ocamlPackages.buildDunePackage {
   nativeBuildInputs = [ which ocamlPackages.menhir ];
   buildInputs = [ alt-ergo-parsers ocamlPackages.cmdliner ];
  preConfigure = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
         preBuild = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
     preInstall = ''
-      export HOME=$PWD
+      export HOME=$(mktemp -d)
     '';
   meta = {
     description = "High-performance theorem prover and SMT solver";

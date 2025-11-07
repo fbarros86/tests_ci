@@ -27,8 +27,8 @@ jobs:
         - uses: cachix/install-nix-action@v31
           with:
             nix_path: nixpkgs=channel:nixos-unstable
-        - run: export HOME=$PWD
+        - run: export HOME=$(mktemp -d)
         - run: nix-shell --arg full false --run 'echo $HOME'
-        - run: nix-shell --option sandbox false --run 'export HOME=$PWD; easycrypt why3config'
-        - run: nix-shell --option sandbox false --run 'export HOME=$PWD; make checkec_${{matrix.size}}_${{matrix.dir}}'
+        - run: nix-shell --option sandbox false --run 'export HOME=$(mktemp -d); easycrypt why3config'
+        - run: nix-shell --option sandbox false --run 'export HOME=$(mktemp -d); make checkec_${{matrix.size}}_${{matrix.dir}}'
 
