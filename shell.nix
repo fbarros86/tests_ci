@@ -11,7 +11,7 @@ with pkgs;
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
     preConfigure = ''
-      export HOME=$PWD
+      export HOME=/root
     '';
     src = fetchFromGitLab {
       owner = "jasmin-lang";
@@ -51,7 +51,7 @@ let
   ecVersion = "ae9418da46b17fef73156599b1ecac72b7f4abaa";
   ec = (easycrypt.overrideAttrs (o: {
     preConfigure = ''
-      export HOME=$PWD
+      export HOME=/root
     '';
     src = fetchFromGitHub {
       owner = "EasyCrypt";
