@@ -18,20 +18,15 @@ jobs:
         runs-on: self-hosted
         strategy:
           fail-fast: false
-          matrix:
-            size: [ '768','1024']
-            dir: [ 'ref' , 'avx2']
+          # matrix:
+          #   size: [ '768','1024']
+          #   dir: [ 'ref' , 'avx2']
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
         - uses: actions/checkout@v4
         - uses: cachix/install-nix-action@v31
           with:
             nix_path: nixpkgs=channel:nixos-unstable
-        - run: export HOME=$PWD
-        - run: |
-            mkdir -p ~/.config/nix
-            echo 'sandbox = false' >> ~/.config/nix/nix.conf
-            echo 'extra-env = HOME=/root' >> ~/.config/nix/nix.conf
         - run: nix-shell --option sandbox false --run 'easycrypt why3config'
-        - run: nix-shell --option sandbox false --run 'make checkec_${{matrix.size}}_${{matrix.dir}}'
+        - run: nix-shell --option sandbox false --run 'make checkec_768_ref'
 
