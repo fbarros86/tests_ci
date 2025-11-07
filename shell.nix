@@ -13,7 +13,7 @@ let jasmin =
     preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
     src = fetchFromGitLab {
@@ -57,7 +57,7 @@ let
       export HOME=$PWD
     '';
 
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
     src = fetchFromGitHub {

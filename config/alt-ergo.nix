@@ -21,7 +21,7 @@ let ocplib-simplex =
     preConfigure =  ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
 
@@ -44,7 +44,7 @@ let
   preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
 
@@ -64,7 +64,7 @@ let alt-ergo-lib = ocamlPackages.buildDunePackage rec {
    preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
   buildInputs = with ocamlPackages; [ dune-configurator ];
@@ -78,7 +78,7 @@ let alt-ergo-parsers = ocamlPackages.buildDunePackage rec {
    preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
   nativeBuildInputs = [ which ocamlPackages.menhir ];
@@ -96,7 +96,7 @@ ocamlPackages.buildDunePackage {
  preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
   meta = {

@@ -13,7 +13,7 @@ let
     preConfigure = ''
       export HOME=$PWD
     '';
-    preInstall = ''
+    preBuild = ''
       export HOME=$PWD
     '';
     src = fetchurl {
