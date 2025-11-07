@@ -11,7 +11,7 @@ let
     pname = "bitwuzla-c";
     version = "1.0.5";
     preConfigure = ''
-      export HOME=/root
+      export HOME=$PWD
     '';
     src = fetchurl {
       url = "https://github.com/bitwuzla/ocaml-bitwuzla/releases/download/${version}/bitwuzla-${version}.tbz";

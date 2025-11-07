@@ -10,6 +10,7 @@ env:
   ECRJOBS: 1
   NIX_CONFIG: |
     sandbox = false
+  HOME: /root
 
 
 jobs:
