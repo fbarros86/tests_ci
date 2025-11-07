@@ -11,13 +11,10 @@ let
     pname = "bitwuzla-c";
     version = "1.0.5";
     preConfigure = ''
-      export HOME=$(mktemp -d)
-    '';
-        preBuild = ''
-      export HOME=$(mktemp -d)
+      export HOME=$PWD
     '';
     preInstall = ''
-      export HOME=$(mktemp -d)
+      export HOME=$PWD
     '';
     src = fetchurl {
       url = "https://github.com/bitwuzla/ocaml-bitwuzla/releases/download/${version}/bitwuzla-${version}.tbz";
