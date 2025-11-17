@@ -71,6 +71,7 @@ let
     ocamlPackages = oc;
     why3 = why;
   };
+  altergo = callPackage ./config/alt-ergo.nix { ocamlPackages = oc; } ;
 in
 
 let mkECvar = lib.strings.concatMapStringsSep ";" ({key, val}: "${key}:${val}"); in
@@ -86,6 +87,7 @@ mkShell ({
 } // lib.optionalAttrs full {
   packages = [
     ec
+    altergo
     cvc5
     z3
   ];
