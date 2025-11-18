@@ -41,8 +41,8 @@ def parse_and_report(log_file, m_type, m_size, m_dir):
         
             e_match = error_pattern.search(line)
             if e_match:
-                duration = s_match.group(1)
-                filepath = s_match.group(2).strip()
+                duration = e_match.group(1)
+                filepath = e_match.group(2).strip()
                 filename = os.path.basename(filepath)
                 
                 results.setdefault(filename, {"status": "❓ Pending", "time": "--", "warnings": 0})
