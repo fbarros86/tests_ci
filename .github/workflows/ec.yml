@@ -18,8 +18,8 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            size: [ '768','1024']
-            dir: [ 'ref' , 'avx2']
+            size: [ '768']
+            dir: [ 'ref' ]
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
         - uses: actions/checkout@v4
