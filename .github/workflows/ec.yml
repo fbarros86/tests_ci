@@ -14,12 +14,12 @@ env:
 jobs:
     test_proofs:
         name: Check Proofs
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
         strategy:
           fail-fast: false
-          # matrix:
-          #   size: [ '768','1024']
-          #   dir: [ 'ref' , 'avx2']
+          matrix:
+            size: [ '768','1024']
+            dir: [ 'ref' , 'avx2']
             # type: [ 'correctness', 'safety' ] --> to add later
         steps:
         - uses: actions/checkout@v4
@@ -27,5 +27,18 @@ jobs:
           with:
             nix_path: nixpkgs=channel:nixos-unstable
         - run: nix-shell --option sandbox false --run 'easycrypt why3config'
-        - run: nix-shell --option sandbox false --run 'make checkec_768_ref'
+        - name: Run Proofs MLKEM${{matrix.size}}(${{matrix.dir}})
+          id: ec_proofs 
+          run: |
+            set -o pipefail
+            nix-shell --run "easycrypt runtest config/tests.config mlkem_${{matrix.size}}_${{matrix.dir}}"  2>&1 | tee proof_output.log
+        - name: Generate Detailed Job Summary
+          if: always() 
+          run: |
+            echo "PROOF_JOB_OUTCOME=${{ steps.ec_proofs.outcome }}" >> $GITHUB_ENV
+            python scripts/generate_summary.py \
+              proof_output.log \
+              "correctness" \
+              "${{ matrix.size }}" \
+              "${{ matrix.dir }}"
 
