@@ -30,6 +30,7 @@ jobs:
         - name: Run Proofs MLKEM${{matrix.size}}(${{matrix.dir}})
           id: ec_proofs 
           run: |
+            set -o pipefail
             nix-shell --run "easycrypt runtest config/tests.config mlkem_${{matrix.size}}_${{matrix.dir}}"  2>&1 | tee proof_output.log
         - name: Generate Detailed Job Summary
           if: always() 
