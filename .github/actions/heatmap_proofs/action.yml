@@ -47,8 +47,11 @@ runs:
         - name: Upload Heatmap Artifacts
           uses: actions/upload-pages-artifact@v3
           with:
+            name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
             path: reports/${{inputs.type}}/${{inputs.size}}/${{inputs.dir}}
         - name: Deploy to GitHub Pages
           id: deployment
           uses: actions/deploy-pages@v4
+          with:
+            artifact_name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
 
