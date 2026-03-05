@@ -1,3 +1,0 @@
-# Linearization
-
-TODO

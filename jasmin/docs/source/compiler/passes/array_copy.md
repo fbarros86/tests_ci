@@ -1,3 +1,0 @@
-# Array Copy
-
-TODO

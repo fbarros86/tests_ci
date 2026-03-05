@@ -911,8 +911,8 @@ case (tr = false).
   have ? : forall &m0 &m1 ,
      (glob DLeft(A,Sim)){m0} = (glob DLeft(A,Sim)){m1} =>
        Pr[MainD(DLeft(A, Sim),RO).distinguish(b) @ &m0 : res] =
-       Pr[MainD(DLeft(A,Sim),LRO).distinguish(b) @ &m1 : res] 
-   by move => &m0 &m1 eqB; byequiv (le); smt().
+       Pr[MainD(DLeft(A,Sim),LRO).distinguish(b) @ &m1 : res]
+   by move => &m0 &m1 eq1; byequiv (le).
   by smt().
 move => *; have -> : tr by smt().
 have left : forall &m0,
@@ -930,8 +930,9 @@ have le :
 have ? : forall &m0 &m1 ,
      (glob DLeft(A,Sim)){m0} = (glob DLeft(A,Sim)){m1} =>
        Pr[MainD(DLeftT(A,Sim),RO).distinguish(b) @ &m0 : res] =
-       Pr[MainD(DLeftT(A,Sim),LRO).distinguish(b) @ &m1 : res] 
- by move => &m0 &m1 eqB; byequiv (le); smt().
+       Pr[MainD(DLeftT(A,Sim),LRO).distinguish(b) @ &m1 : res].
+  move => &m0 &m1 eqB; byequiv (le) => //=.  
+  
 by smt().
 qed.
 
@@ -968,8 +969,8 @@ move => ->.
   have ? : forall &m0 &m1 ,
      (glob DLeft(A,Sim)){m0} = (glob DLeft(A,Sim)){m1} =>
        Pr[MainD(DRight(A,Sim),RO).distinguish(b) @ &m0 : res] =
-       Pr[MainD(DRight(A,Sim),LRO).distinguish(b) @ &m1 : res] 
-     by move => &m0 &m1 eqB; byequiv (le); smt().
+       Pr[MainD(DRight(A,Sim),LRO).distinguish(b) @ &m1 : res]
+     by move => &m0 &m1 eqB; byequiv (le).
   by smt().
 move => *; have -> : tr by smt().
 have left : forall &m0,  
@@ -999,8 +1000,8 @@ have left : forall &m0,
   have ? : forall &m0 &m1 ,
      (glob DLeftT(A,Sim)){m0} = (glob DLeftT(A,Sim)){m1} =>
        Pr[MainD(DRightT(A,Sim),RO).distinguish(b) @ &m0 : res] =
-       Pr[MainD(DRightT(A,Sim),LRO).distinguish(b) @ &m1 : res] 
-     by move => &m0 &m1 eqB; byequiv (le); smt().
+       Pr[MainD(DRightT(A,Sim),LRO).distinguish(b) @ &m1 : res] .
+     by move => &m0 &m1 eqB; byequiv (le) => //=. 
   by smt().
 qed.
 

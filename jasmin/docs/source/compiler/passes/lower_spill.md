@@ -1,3 +1,0 @@
-# Lowering of spills
-
-TODO

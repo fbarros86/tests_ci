@@ -1,3 +1,0 @@
-# Propagate Inline
-
-TODO

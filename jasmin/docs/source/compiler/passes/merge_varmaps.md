@@ -1,3 +1,0 @@
-# Merge varmaps
-
-TODO

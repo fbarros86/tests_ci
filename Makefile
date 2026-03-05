@@ -2,7 +2,18 @@
 
 # --------------------------------------------------------------------
 ECCONF := config/tests.config 
-CHECKS ?= mlkem
+ECJOBS ?= 3
+CHECKS ?= \
+	mlkem_correctness_768_ref   \
+	mlkem_correctness_768_avx2  \
+	mlkem_correctness_1024_ref  \
+	mlkem_correctness_1024_avx2 \
+	mlkem_safety_768_ref        \
+	mlkem_safety_768_avx2       \
+	mlkem_safety_1024_ref       \
+	mlkem_safety_1024_avx2      \
+	mlkem_security              \
+	mlkem_spec_bridge
 
 # --------------------------------------------------------------------
 .PHONY: default check checkec jasmin assembly clean_eco
@@ -18,19 +29,7 @@ jasmin:
 	make -C code/jasmin/1024/avx2/extraction
 
 checkec:
-	easycrypt runtest $(ECCONF) $(CHECKS)
-
-checkec_768_ref:
-	easycrypt runtest $(ECCONF) mlkem_768_ref
-
-checkec_768_avx2:
-	easycrypt runtest $(ECCONF) mlkem_768_avx2
-
-checkec_1024_ref:
-	easycrypt runtest $(ECCONF) mlkem_1024_ref
-
-checkec_1024_avx2:
-	easycrypt runtest $(ECCONF) mlkem_1024_avx2
+	easycrypt runtest -jobs $(ECJOBS) $(ECCONF) $(CHECKS)
 
 assembly:
 	$(MAKE) -C code/jasmin/768/avx2/ jkem.s

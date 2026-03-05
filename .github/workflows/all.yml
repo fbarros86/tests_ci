@@ -1,0 +1,39 @@
+
+name: MLKEM CI
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main"]
+  pull_request:
+    branches: ["main"]
+    
+env:
+  NIXPKGS_ALLOW_UNFREE: 1
+
+jobs:
+    heatmap_proofs:
+        name: Generate Heatmap of Proofs
+        runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            size: [ '768' ,'1024' ]
+            dir: [ 'avx2' , 'ref']
+            type: [ 'safety', 'correctness' ]
+        environment:
+          name: github-pages
+          url: easycrypt-heatmap-reports-${{matrix.type}}-${{matrix.size}}-${{matrix.dir}}
+        steps:
+         - uses: actions/checkout@v6
+           with:
+            submodules: recursive
+         - uses: ./.github/actions/ec_extraction
+           with:
+            type: ${{matrix.type}}
+            size: ${{matrix.size}}
+            dir: ${{matrix.dir}}
+

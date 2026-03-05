@@ -1,10 +1,16 @@
 require "kem.jinc"
 
+#[safety =
+   { requires = is_arr_init(coins,0,2*MLKEM_SYMBYTES)
+   , ensures = is_arr_init(public_key,0,MLKEM_PUBLICKEYBYTES) && is_arr_init(secret_key,0,MLKEM_SECRETKEYBYTES)
+   }
+ ]
+#[ct = "secret × secret × secret → secret × secret × public"]
 export fn jade_kem_mlkem_mlkem768_amd64_ref_keypair_derand(
-    #secret #spill_to_mmx reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key,
-    #secret #spill_to_mmx reg ptr u8[2*MLKEM_SYMBYTES] coins)
- -> #secret reg ptr u8[MLKEM_PUBLICKEYBYTES], #secret reg ptr u8[MLKEM_SECRETKEYBYTES], #public reg u64
+    #[spill_to_mmx] reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
+    #[spill_to_mmx] reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key,
+    #[spill_to_mmx] reg ptr u8[2*MLKEM_SYMBYTES] coins)
+ -> reg ptr u8[MLKEM_PUBLICKEYBYTES], reg ptr u8[MLKEM_SECRETKEYBYTES], reg u64
 {
   reg u64 r;
   stack u8[MLKEM_PUBLICKEYBYTES] pk;
@@ -32,7 +38,6 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_keypair_derand(
 
   pk = pkp;
   sk = skp;
-  rd = rdp;
 
   public_key = #copy(pk);
   secret_key = #copy(sk);
@@ -44,10 +49,12 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_keypair_derand(
   return public_key, secret_key, r;
 }
 
+#[safety = { ensures = is_arr_init(public_key,0,MLKEM_PUBLICKEYBYTES) && is_arr_init(secret_key,0,MLKEM_SECRETKEYBYTES)}]
+#[ct = "secret × secret → secret × secret × public"]
 export fn jade_kem_mlkem_mlkem768_amd64_ref_keypair(
-  #secret #spill_to_mmx reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
-  #secret #spill_to_mmx reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key)
- -> #secret reg ptr u8[MLKEM_PUBLICKEYBYTES], #secret reg ptr u8[MLKEM_SECRETKEYBYTES], #public reg u64
+  #[spill_to_mmx] reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
+  #[spill_to_mmx] reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key)
+ -> reg ptr u8[MLKEM_PUBLICKEYBYTES], reg ptr u8[MLKEM_SECRETKEYBYTES], reg u64
 {
   reg u64 r;
   stack u8[2*MLKEM_SYMBYTES] rd;
@@ -60,12 +67,18 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_keypair(
   return public_key,secret_key,r;
 }
 
+#[safety =
+   { requires = is_arr_init(coins,0,MLKEM_SYMBYTES) && is_arr_init(public_key,0,MLKEM_PUBLICKEYBYTES)
+   , ensures = is_arr_init(ciphertext,0,MLKEM_CIPHERTEXTBYTES) && is_arr_init(shared_secret,0,MLKEM_SYMBYTES)
+   }
+]
+#[ct = "secret × secret × secret × secret → secret × secret × public"]
 export fn jade_kem_mlkem_mlkem768_amd64_ref_enc_derand(
-    #secret #spill_to_mmx reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_SYMBYTES] shared_secret,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_SYMBYTES] coins)
-    -> #secret reg ptr u8[MLKEM_CIPHERTEXTBYTES], #secret reg ptr u8[MLKEM_SYMBYTES], #public reg u64
+    #[spill_to_mmx] reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
+    #[spill_to_mmx] reg ptr u8[MLKEM_SYMBYTES] shared_secret,
+    #[spill_to_mmx] reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key,
+    #[spill_to_mmx] reg ptr u8[MLKEM_SYMBYTES] coins)
+    -> reg ptr u8[MLKEM_CIPHERTEXTBYTES], reg ptr u8[MLKEM_SYMBYTES], reg u64
 {
   reg u64 r;
   stack u8[MLKEM_CIPHERTEXTBYTES] ct;
@@ -97,8 +110,6 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_enc_derand(
 
   ct = ctp;
   shk = shkp;
-  pk = pkp;
-  rd = rdp;
 
   ciphertext = #copy(ct);
   shared_secret = #copy(shk);
@@ -107,12 +118,17 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_enc_derand(
   return ciphertext, shared_secret, r;
 }
 
-
+#[safety =
+   { requires = is_arr_init(public_key,0,MLKEM_PUBLICKEYBYTES)
+   , ensures = is_arr_init(ciphertext,0,MLKEM_CIPHERTEXTBYTES) && is_arr_init(shared_secret,0,MLKEM_SYMBYTES)
+   }
+ ]
+#[ct = "secret × secret × secret → secret × secret × public"]
 export fn jade_kem_mlkem_mlkem768_amd64_ref_enc(
-    #secret #spill_to_mmx reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_SYMBYTES] shared_secret,
-    #secret #spill_to_mmx reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key)
-    -> #secret reg ptr u8[MLKEM_CIPHERTEXTBYTES], #secret reg ptr u8[MLKEM_SYMBYTES], #public reg u64
+    #[spill_to_mmx] reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
+    #[spill_to_mmx] reg ptr u8[MLKEM_SYMBYTES] shared_secret,
+    #[spill_to_mmx] reg ptr u8[MLKEM_PUBLICKEYBYTES] public_key)
+    -> reg ptr u8[MLKEM_CIPHERTEXTBYTES], reg ptr u8[MLKEM_SYMBYTES], reg u64
 {
   reg u64 r;
   stack u8[MLKEM_SYMBYTES] rd;
@@ -126,11 +142,17 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_enc(
   return ciphertext, shared_secret, r;
 }
 
+#[safety =
+   { requires = is_arr_init(ciphertext,0,MLKEM_CIPHERTEXTBYTES) && is_arr_init(secret_key,0,MLKEM_SECRETKEYBYTES)
+   , ensures = is_arr_init(shared_secret,0,MLKEM_SYMBYTES)
+   }
+ ]
+#[ct = "secret × secret × secret → secret × public"]
 export fn jade_kem_mlkem_mlkem768_amd64_ref_dec(
-    #secret #spill_to_mmx reg ptr u8[MLKEM_SYMBYTES] shared_secret,
-    #secret reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
-    #secret reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key)
-    -> #secret reg ptr u8[MLKEM_SYMBYTES], #public reg u64
+    #[spill_to_mmx] reg ptr u8[MLKEM_SYMBYTES] shared_secret,
+    reg ptr u8[MLKEM_CIPHERTEXTBYTES] ciphertext,
+    reg ptr u8[MLKEM_SECRETKEYBYTES] secret_key)
+    -> reg ptr u8[MLKEM_SYMBYTES], reg u64
 {
   reg u64 r;
   stack u8[MLKEM_SYMBYTES] shk;
@@ -156,8 +178,6 @@ export fn jade_kem_mlkem_mlkem768_amd64_ref_dec(
   () = #unspill(shared_secret);
 
   shk = shkp;
-  sk = skp;
-  ct = ctp;
 
   shared_secret = #copy(shk);
 

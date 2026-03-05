@@ -1,6 +1,0 @@
-export fn id(#secret reg u32 x) -> #secret reg u32 {
-  stack u32 s;
-  s = x;
-  x = s;
-  return x;
-}

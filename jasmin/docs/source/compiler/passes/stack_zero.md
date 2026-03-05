@@ -1,3 +1,0 @@
-# Stack zeroization
-
-TODO

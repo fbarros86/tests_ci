@@ -854,7 +854,11 @@ seq 2 2 : (={H1.bad,b} /\
     (* case c: RO2 inconsistency for entries not added by dec oracle *)
     (forall m, m \in RO2.RO.m{1} => m \notin RO2.RO.m{2} => 
                assoc UU2.lD{2} (m2c m CCA.sk{2}.`1 RO1E.FunRO.f{2}) = RO2.RO.m{1}.[m]))
-     ));1: by wp;conseq />;[smt() | inline *;auto => />;smt(mem_empty get_setE)].
+     )).
+     + wp;conseq />;[smt() |].
+        inline *;auto => /> &1 &2 ????ml*; do split; rewrite ?get_setE /=;1..3:smt(mem_set mem_empty get_setE).
+        move => m2 ?; have <- : m2 = ml by smt(mem_set mem_empty).
+        by rewrite get_set_eqE //=.
 wp;call(:H1.bad,
      ={glob RO1E.FunRO, glob CCA, H1.bad} /\ uniq (unzip1 UU2.lD{2}) /\
     (* case a: all occuring badc accounted for *)
@@ -885,10 +889,13 @@ wp;call(:H1.bad,
   if{1}.
   (* badc *) 
   + rcondt {1} 2; 1: by auto => />; smt(assoc_none).
-    by auto => />;smt(get_setE assoc_none assoc_cons mapP).
+    auto=> /> &1 &2; case=> |> *.
+    - by progress; smt(get_setE mem_set assoc_cons assocTP mapP).
+    - by progress; smt(get_setE mem_set assoc_cons assocTP mapP).
   (* good c *)
   + rcondt {1} 5; 1: by auto => />; smt(assoc_none).
-    by auto => />;smt(get_setE assoc_none assoc_cons mapP).
+    auto=> /> &1 &2; case=> |> *.
+    by progress; smt(get_setE mem_set assoc_cons assocTP mapP).
 + move => *;proc;inline *;auto => />; 
   sp;if{1};2:by auto => /> /#.
   sp;if{1}; 2: by auto => />  *;smt(dkey_ll). 
@@ -900,7 +907,32 @@ wp;call(:H1.bad,
 + proc;inline *. 
   swap {1} 3 -2; swap {2} 8 -7;seq 1 1 : (#pre /\ ={k}); 1: by auto.
   sp 2 7;if{2};last by auto => /> /#.
-  by if{1}; auto => />;smt(get_setE assoc_none assoc_cons mapP).
+  if{1}; auto=> |> &1 &2 b Nb h1 h2 h3 h4 h5 h6 h7 h8; last first.
+  - by smt(get_setE mem_set assoc_cons assocTP mapP).
+  split=> h9 h10; last first.
+  - split; first by rewrite !get_setE /#.
+    split; first by smt(assocTP).
+    by progress; smt(get_setE mem_set assoc_cons assocTP mapP).
+  - split; last first.
+    - split; first by move=> *; rewrite mem_set /#.
+      split.
+      - move=> m'; rewrite mem_set; case => [?|->>]; last first.
+        - split; first done.
+          rewrite !get_setE /=; split; first smt(assocTP).
+          move: h9; pose s := (enc _ _ _).
+          case _: (assoc _ _) => //= k' E; (have := h4 (s, k') _ _) => /=.
+          - by apply: assoc_some.
+          - by rewrite /goodc /oc2m /c2m !h10.
+          by rewrite /oc2m h10 /=.
+        - split; first by smt(assocTP).
+          by split; rewrite !get_setE /#.
+      - by move=> m'; rewrite !(mem_set, get_setE) /#.
+    - rewrite !get_setE /=.
+       move: h9; pose s := (enc _ _ _).
+       case _: (assoc _ _) => //= k' E; (have := h4 (s, k') _ _) => /=.
+       - by apply: assoc_some.
+       - by rewrite /goodc /oc2m /c2m !h10.
+       by rewrite /oc2m h10 /=.
 + by move => *;proc;inline *;auto => />;smt(dkey_ll). 
 + by move => *;proc;inline *;auto => />;smt(dkey_ll). 
 + by auto => /> /#. 
@@ -1110,9 +1142,10 @@ wp;call(:H1.bad,
 + by move => *;proc;inline *;auto => />;smt(dkey_ll). 
 auto => /> &2 *; do split; 1:smt(fdom0  filter0 fcard_eq0 fcard1).
 move => 16?H *;do split;1,2: smt(). 
-by move => notb ;do split => *; move : H;rewrite notb /= => [#] 7?->>3?;
-           [ rewrite subset_cardP; [ smt(fcard1)| smt( sub1set mem_filter)] |
-               smt(subset_cardP sub1set mem_filter fcard1 elems_fset1)].
+move => notb ;do split => *; move : H;rewrite notb /= => [#] 7?->>3?;
+           [ rewrite subset_cardP; [ smt(fcard1)| smt( sub1set mem_filter)] | ].
+move => ?; do split;1..3:smt(subset_cardP sub1set mem_filter fcard1 elems_fset1).
+smt(mem_head head_behead size_ge0 size_filter subset_cardP sub1set mem_filter fcard1 elems_fset1).
 qed.
 
 lemma bound_bad2 &m :
@@ -1274,7 +1307,7 @@ proc;inline *;
   case (m{1} \notin RO2.RO.m{1}).
 + rcondt{1} 8;1 : by auto.
   rcondt{2} 9;1 : by auto.
-  auto => /> &2;rewrite /b2i => *; 
+  auto => /> &2;rewrite /b2i => *; do split => *;split => *;
       smt(disjointP fcardUI_indep in_filter in_fset0 fcard_ge0 fcard_eq0 setUE 
           elems_fset0 elems_fset1 set1E elems_fset1 fcardU  fcardI in_filter 
           in_fset0 mem_fdom filter1 fcardU fset0U fdom_set   filterU fdom0  

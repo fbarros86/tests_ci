@@ -1,2 +1,0 @@
-require "keccak1600_imem_avx2.jinc"
-require "keccak1600_imem_avx2x4.jinc"
