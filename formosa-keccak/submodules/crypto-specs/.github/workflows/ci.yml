@@ -1,0 +1,43 @@
+name: crypto-specs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  OPAMROOT: /home/charlie/.opam
+  OPAMYES: true
+  OPAMJOBS: 2
+  ECRJOBS: 1
+
+jobs:
+  ec:
+    name: Check EasyCrypt Files
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/easycrypt/ec-build-box:main
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        repository: jasmin-lang/jasmin
+        ref: refs/heads/main
+        path: jasmin
+    - name: Compile & Install EasyCrypt
+      run: |
+        opam pin add -n easycrypt https://github.com/EasyCrypt/easycrypt.git
+        opam install -v easycrypt
+    - name: Detect SMT provers
+      run: |
+        opam exec -- easycrypt why3config
+    - name: Compile Project
+      run: opam exec -- make check
+    - name: Upload report
+      uses: actions/upload-artifact@v6
+      with:
+        name: Compilation report
+        path: report.yaml

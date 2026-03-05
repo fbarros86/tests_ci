@@ -1,0 +1,47 @@
+opam-version: "2.0"
+name: "jasmin"
+version: "dev"
+synopsis: "High-Assurance and High-Speed Cryptography"
+description: """
+Jasmin is a workbench for high-assurance and high-speed cryptography. Jasmin
+implementations aim at being efficient, safe, correct, and secure.
+"""
+maintainer: "Jean-Christophe Léchenet <jean-christophe.lechenet@inria.fr>"
+authors: ["Jasmin authors and contributors"]
+license: "MIT"
+homepage: "https://github.com/jasmin-lang/jasmin"
+bug-reports: "https://github.com/jasmin-lang/jasmin/issues"
+dev-repo: "git+https://github.com/jasmin-lang/jasmin.git"
+
+build: [
+  make "build"
+]
+install: [
+  make "PREFIX=%{prefix}%" "install"
+]
+depends: [
+  "ocaml" { >= "4.12" & build }
+  "batteries" {>= "3.5"}
+  "cmdliner" {>= "1.1" & build }
+  "dune" {>= "3.7"}
+  "menhir" {>= "20160825" & build }
+  "menhirLib"
+  "camlidl"
+  "zarith" {>= "1.9"}
+  "apron" {>= "v0.9.12"}
+  "conf-ppl"
+  "yojson" {>= "1.6.0"}
+  "angstrom" {>= "0.14.0"}
+  "ocamlfind" { build }
+  "coq" {>= "8.20.0" & < "9.1~"}
+  "coq-elpi" {>= "2.3.0"}
+  "coq-mathcomp-ssreflect" {>= "2.0" & < "2.5~"}
+  "coq-mathcomp-algebra"
+  "coq-mathcomp-algebra-tactics"
+  "coq-mathcomp-word" {>= "3.2"}
+  "coq-paco"
+  "coq-itree"
+]
+conflicts: [
+  "ez-conf-lib"
+]
