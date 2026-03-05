@@ -31,7 +31,7 @@ jobs:
          - uses: actions/checkout@v6
            with:
             submodules: recursive
-         - uses: ./.github/actions/ec_extraction
+         - uses: ./.github/actions/heatmap_proofs
            with:
             type: ${{matrix.type}}
             size: ${{matrix.size}}
