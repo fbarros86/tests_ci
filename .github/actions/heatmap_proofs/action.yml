@@ -54,4 +54,6 @@ runs:
           uses: actions/deploy-pages@v4
           with:
             artifact_name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
-
+        - name: Show URL
+          shell: bash
+          run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
