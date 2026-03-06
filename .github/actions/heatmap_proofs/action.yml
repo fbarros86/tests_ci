@@ -36,15 +36,20 @@ runs:
            for EC_FILE in ${TARGET_DIR}/*.ec; do
               if [ -e "$EC_FILE" ]; then
                 TSTATS_FILE="${TSTATS_DIR}/$(basename "${EC_FILE%.ec}.tstats")"
-                FILENAME_BASE="$(basename "${EC_FILE%.ec}")"
                 HTML_REPORT_PATH="${HTML_REPORT_DIR}/index.html"
                 nix-shell --run "easycrypt -tstats ${TSTATS_FILE} ${EC_FILE}"
                 python scripts/generate_heatmap.py ${EC_FILE} ${TSTATS_FILE} > ${HTML_REPORT_PATH}                
               fi
            done
+        - name: Debug report files
+          shell: bash
+          run: |
+              echo "Listing reports directory:"
+              ls -R reports || true
         - name: Setup Pages
           uses: actions/configure-pages@v5
         - name: Upload Heatmap Artifacts
+          id: deployment
           uses: actions/upload-pages-artifact@v3
           with:
             name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
