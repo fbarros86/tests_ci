@@ -37,7 +37,7 @@ runs:
               if [ -e "$EC_FILE" ]; then
                 TSTATS_FILE="${TSTATS_DIR}/$(basename "${EC_FILE%.ec}.tstats")"
                 FILENAME_BASE="$(basename "${EC_FILE%.ec}")"
-                HTML_REPORT_PATH="index.html"
+                HTML_REPORT_PATH="${HTML_REPORT_DIR}/index.html"
                 nix-shell --run "easycrypt -tstats ${TSTATS_FILE} ${EC_FILE}"
                 python scripts/generate_heatmap.py ${EC_FILE} ${TSTATS_FILE} > ${HTML_REPORT_PATH}                
               fi
@@ -54,6 +54,3 @@ runs:
           uses: actions/deploy-pages@v4
           with:
             artifact_name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
-        - name: Show URL
-          shell: bash
-          run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
