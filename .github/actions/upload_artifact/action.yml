@@ -1,0 +1,41 @@
+name: Upload Proofs Heatmap 
+description: Upload a heatmap of proofs to github pages
+
+runs:
+  using: composite
+  steps:
+        - name: Install Nix
+          uses: cachix/install-nix-action@v31
+          with:
+            nix_path: nixpkgs=channel:nixos-unstable
+        - name: Check Dependencies
+          shell: bash
+          run: nix-shell --run "echo Dependencies OK…"
+        - name: Setup Pages
+          uses: actions/configure-pages@v5
+        - name: Build index
+          shell: bash
+          run: |
+
+            INDEX=reports/index.html
+
+            echo "<html><body>" > $INDEX
+            echo "<h1>EasyCrypt Proof Heatmaps</h1>" >> $INDEX
+            echo "<ul>" >> $INDEX
+
+            find site -name "*.html" ! -name "index.html" | while read f; do
+              name=$(basename "$f")
+              echo "<li><a href=\"$name\">$name</a></li>" >> $INDEX
+            done
+
+            echo "</ul></body></html>" >> $INDEX
+        - name: Upload Heatmap Artifacts
+          uses: actions/upload-pages-artifact@v3
+          with:
+              name: heatmap-report
+              path: reports/
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
+          with:
+            artifact_name: heatmap-report

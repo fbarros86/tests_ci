@@ -29,7 +29,7 @@ runs:
           shell: bash
           run: |
            TARGET_DIR="proof/${{inputs.type}}/${{inputs.size}}/${{inputs.dir}}"
-           HTML_REPORT_DIR="reports/${{inputs.type}}/${{inputs.size}}/${{inputs.dir}}"
+           HTML_REPORT_DIR="reports"
            mkdir -p ${HTML_REPORT_DIR}
            TSTATS_DIR=".tstats"
            mkdir -p ${TSTATS_DIR}
@@ -37,31 +37,8 @@ runs:
               if [ -e "$EC_FILE" ]; then
                 TSTATS_FILE="${TSTATS_DIR}/$(basename "${EC_FILE%.ec}.tstats")"
                 FILENAME_BASE="$(basename "${EC_FILE%.ec}")"
-                HTML_REPORT_PATH="${HTML_REPORT_DIR}/index.html"
+                HTML_REPORT_PATH="${HTML_REPORT_DIR}/${FILENAME_BASE}.html"
                 nix-shell --run "easycrypt -tstats ${TSTATS_FILE} ${EC_FILE}"
                 python scripts/generate_heatmap.py ${EC_FILE} ${TSTATS_FILE} > ${HTML_REPORT_PATH}                
               fi
            done
-        - name: Debug report files
-          shell: bash
-          run: |
-              echo "Listing reports directory:"
-              ls -R reports || true
-        - name: Upload Heatmap Artifacts Test
-          uses: actions/upload-artifact@v4
-          with:
-            name: easycrypt-heatmap-reports2-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
-            path: reports/${{inputs.type}}/${{inputs.size}}/${{inputs.dir}}
-            retention-days: 7
-        - name: Setup Pages
-          uses: actions/configure-pages@v5
-        - name: Upload Heatmap Artifacts
-          uses: actions/upload-pages-artifact@v3
-          with:
-            name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
-            path: reports/${{inputs.type}}/${{inputs.size}}/${{inputs.dir}}
-        - name: Deploy to GitHub Pages
-          id: deployment
-          uses: actions/deploy-pages@v4
-          with:
-            artifact_name: easycrypt-heatmap-reports-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}

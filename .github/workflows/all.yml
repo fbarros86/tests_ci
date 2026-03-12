@@ -39,4 +39,16 @@ jobs:
             type: ${{matrix.type}}
             size: ${{matrix.size}}
             dir: ${{matrix.dir}}
+    upload_artifact:
+        name: Upload Heatmap Artifacts
+        needs: heatmap_proofs
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v6
+            with:
+              submodules: recursive
+          - uses: ./.github/actions/upload_artifact
+          
+          
+          
 
