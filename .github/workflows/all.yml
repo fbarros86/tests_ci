@@ -27,6 +27,8 @@ jobs:
             exclude:
               - dir: 'ref'
                 type: 'safety'
+              - dir: 'avx2'
+                type: 'correctness'
         environment:
           name: github-pages
           url: easycrypt-heatmap-reports-${{matrix.type}}-${{matrix.size}}-${{matrix.dir}}
