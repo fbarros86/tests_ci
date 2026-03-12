@@ -10,11 +10,10 @@ with pkgs;
 
 let jasmin =
   jasmin-compiler.overrideAttrs (o: {
-    src = fetchFromGitLab {
-      owner = "jasmin-lang";
-      repo = "jasmin-compiler";
-      rev = "731add92e577d47afa1b88c8a80b3216af29ee40";
-      hash = "sha256-2VfTqnQMioiPAdgQGAfUA4GT/r3CLO5HmzBd532S5NI=";
+    version = "2026.03.0";
+    src = fetchurl {
+      url = "https://github.com/jasmin-lang/jasmin/releases/download/v2026.03.0/jasmin-compiler-v2026.03.0.tar.bz2";
+      hash = "sha256-3sYqPNDNQs/pbsZLPNOWHg6KCfuSzrZBdc/7VP3lDkA=";
     };
   })
 ; in
@@ -32,8 +31,8 @@ let formosa-keccak =
   fetchFromGitHub {
     owner = "formosa-crypto";
     repo = "formosa-keccak";
-    rev = "b156255e8119edff499c91aea5a9d5f0385cbfe0";
-    hash = "sha256-8mQFs229LOQx783t+rfql/fAvQxYQYnvv4NSHGto8wY=";
+    rev = "fe5d22fa85672ffbe5cfb4845037b50cf2eaa1f7";
+    hash = "sha256-HRUj7XcMUzCrpkoxm7I9G8/2Ms9XJ3bndMrxFk+7tJg=";
   }
 ; in
 
