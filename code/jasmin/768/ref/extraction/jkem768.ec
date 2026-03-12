@@ -356,8 +356,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray32.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray32.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -366,8 +365,8 @@ module M = {
         if ((4 <= lEN)) {
           w <-
           (zeroextu64
-          (get32_direct (WArray32.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get32_direct (WArray32.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -378,8 +377,8 @@ module M = {
         if (((aT8 < 8) /\ (2 <= lEN))) {
           t16 <-
           (zeroextu64
-          (get16_direct (WArray32.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get16_direct (WArray32.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -392,8 +391,8 @@ module M = {
           if ((1 <= lEN)) {
             t8 <-
             (zeroextu64
-            (get8_direct (WArray32.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (get8_direct (WArray32.init8 (fun i => buf.[i])) (offset + dELTA)
+            ));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -625,8 +624,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray33.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray33.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -635,8 +633,8 @@ module M = {
         if ((4 <= lEN)) {
           w <-
           (zeroextu64
-          (get32_direct (WArray33.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get32_direct (WArray33.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -647,8 +645,8 @@ module M = {
         if (((aT8 < 8) /\ (2 <= lEN))) {
           t16 <-
           (zeroextu64
-          (get16_direct (WArray33.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get16_direct (WArray33.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -661,8 +659,8 @@ module M = {
           if ((1 <= lEN)) {
             t8 <-
             (zeroextu64
-            (get8_direct (WArray33.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (get8_direct (WArray33.init8 (fun i => buf.[i])) (offset + dELTA)
+            ));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -787,8 +785,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray34.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray34.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -797,8 +794,8 @@ module M = {
         if ((4 <= lEN)) {
           w <-
           (zeroextu64
-          (get32_direct (WArray34.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get32_direct (WArray34.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -809,8 +806,8 @@ module M = {
         if (((aT8 < 8) /\ (2 <= lEN))) {
           t16 <-
           (zeroextu64
-          (get16_direct (WArray34.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get16_direct (WArray34.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -823,8 +820,8 @@ module M = {
           if ((1 <= lEN)) {
             t8 <-
             (zeroextu64
-            (get8_direct (WArray34.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (get8_direct (WArray34.init8 (fun i => buf.[i])) (offset + dELTA)
+            ));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -949,8 +946,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray64.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray64.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -959,8 +955,8 @@ module M = {
         if ((4 <= lEN)) {
           w <-
           (zeroextu64
-          (get32_direct (WArray64.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get32_direct (WArray64.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -971,8 +967,8 @@ module M = {
         if (((aT8 < 8) /\ (2 <= lEN))) {
           t16 <-
           (zeroextu64
-          (get16_direct (WArray64.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (get16_direct (WArray64.init8 (fun i => buf.[i])) (offset + dELTA))
+          );
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -985,8 +981,8 @@ module M = {
           if ((1 <= lEN)) {
             t8 <-
             (zeroextu64
-            (get8_direct (WArray64.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (get8_direct (WArray64.init8 (fun i => buf.[i])) (offset + dELTA)
+            ));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -1407,8 +1403,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray1088.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray1088.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -1418,7 +1413,7 @@ module M = {
           w <-
           (zeroextu64
           (get32_direct (WArray1088.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (offset + dELTA)));
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -1430,7 +1425,7 @@ module M = {
           t16 <-
           (zeroextu64
           (get16_direct (WArray1088.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (offset + dELTA)));
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -1444,7 +1439,7 @@ module M = {
             t8 <-
             (zeroextu64
             (get8_direct (WArray1088.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (offset + dELTA)));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -1569,8 +1564,7 @@ module M = {
       aT8 <- (aT - cUR);
       if ((8 <= lEN)) {
         w <-
-        (get64_direct (WArray1184.init8 (fun i => buf.[i]))
-        (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA))));
+        (get64_direct (WArray1184.init8 (fun i => buf.[i])) (offset + dELTA));
         w <@ __SHLQ (w, aT8);
         dELTA <- (dELTA + (8 - aT8));
         lEN <- (lEN - (8 - aT8));
@@ -1580,7 +1574,7 @@ module M = {
           w <-
           (zeroextu64
           (get32_direct (WArray1184.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (offset + dELTA)));
           w <@ __SHLQ (w, aT8);
           dELTA <- (dELTA + ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
           lEN <- (lEN - ((8 <= (4 + aT8)) ? (8 - aT8) : 4));
@@ -1592,7 +1586,7 @@ module M = {
           t16 <-
           (zeroextu64
           (get16_direct (WArray1184.init8 (fun i => buf.[i]))
-          (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+          (offset + dELTA)));
           dELTA <- (dELTA + ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           lEN <- (lEN - ((8 <= (2 + aT8)) ? (8 - aT8) : 2));
           t16 <@ __SHLQ (t16, aT8);
@@ -1606,7 +1600,7 @@ module M = {
             t8 <-
             (zeroextu64
             (get8_direct (WArray1184.init8 (fun i => buf.[i]))
-            (W64.to_uint ((W64.of_int offset) + (W64.of_int dELTA)))));
+            (offset + dELTA)));
             t8 <- (t8 `|` (W64.of_int (256 * (tRAIL %% 256))));
             dELTA <- (dELTA + 1);
             lEN <- (lEN - 1);
@@ -2572,54 +2566,54 @@ module M = {
     }
     return rp;
   }
-  proc __rej_uniform (rp:W16.t Array256.t, offset:W64.t, buf:W8.t Array168.t) : 
-  W64.t * W16.t Array256.t = {
-    var ctr:W64.t;
+  proc __rej_uniform (rp:W16.t Array256.t, offset:int, buf:W8.t Array168.t) : 
+  int * W16.t Array256.t = {
     var ms:W64.t;
-    var pos:W64.t;
     var cond:bool;
     var val1:W16.t;
     var t:W16.t;
     var val2:W16.t;
+    var ctr:int;
+    var pos:int;
     ms <- (init_msf);
     ctr <- offset;
-    pos <- (W64.of_int 0);
-    cond <- (pos \ult (W64.of_int (168 - 2)));
+    pos <- 0;
+    cond <- (pos < (168 - 2));
     while (cond) {
       ms <- (update_msf cond ms);
-      cond <- (ctr \ult (W64.of_int 256));
+      cond <- (ctr < 256);
       if (cond) {
         ms <- (update_msf cond ms);
-        val1 <- (zeroextu16 buf.[(W64.to_uint pos)]);
+        val1 <- (zeroextu16 buf.[pos]);
         val1 <- (protect_16 val1 ms);
-        t <- (zeroextu16 buf.[(W64.to_uint (pos + (W64.of_int 1)))]);
+        t <- (zeroextu16 buf.[(pos + 1)]);
         t <- (protect_16 t ms);
         val2 <- t;
         val2 <- (val2 `>>` (W8.of_int 4));
         t <- (t `&` (W16.of_int 15));
         t <- (t `<<` (W8.of_int 8));
         val1 <- (val1 `|` t);
-        t <- (zeroextu16 buf.[(W64.to_uint (pos + (W64.of_int 2)))]);
+        t <- (zeroextu16 buf.[(pos + 2)]);
         t <- (protect_16 t ms);
         t <- (t `<<` (W8.of_int 4));
         val2 <- (val2 `|` t);
-        pos <- (pos + (W64.of_int 3));
+        pos <- (pos + 3);
         cond <- (val1 \ult (W16.of_int 3329));
         if (cond) {
           ms <- (update_msf cond ms);
-          rp.[(W64.to_uint ctr)] <- val1;
-          ctr <- (ctr + (W64.of_int 1));
+          rp.[ctr] <- val1;
+          ctr <- (ctr + 1);
         } else {
           ms <- (update_msf (! cond) ms);
         }
         cond <- (val2 \ult (W16.of_int 3329));
         if (cond) {
           ms <- (update_msf cond ms);
-          cond <- (ctr \ult (W64.of_int 256));
+          cond <- (ctr < 256);
           if (cond) {
             ms <- (update_msf cond ms);
-            rp.[(W64.to_uint ctr)] <- val2;
-            ctr <- (ctr + (W64.of_int 1));
+            rp.[ctr] <- val2;
+            ctr <- (ctr + 1);
           } else {
             ms <- (update_msf (! cond) ms);
           }
@@ -2628,9 +2622,9 @@ module M = {
         }
       } else {
         ms <- (update_msf (! cond) ms);
-        pos <- (W64.of_int 168);
+        pos <- 168;
       }
-      cond <- (pos \ult (W64.of_int (168 - 2)));
+      cond <- (pos < (168 - 2));
     }
     return (ctr, rp);
   }
@@ -2642,13 +2636,13 @@ module M = {
     var extseed:W8.t Array34.t;
     var i:int;
     var state:W64.t Array25.t;
-    var ctr:W64.t;
-    var sctr:W64.t;
     var buf:W8.t Array168.t;
     var poly:W16.t Array256.t;
     var k:W64.t;
     var rij:W16.t Array256.t;
     var t:W16.t;
+    var ctr:int;
+    var sctr:int;
     buf <- witness;
     extseed <- witness;
     poly <- witness;
@@ -2675,8 +2669,8 @@ module M = {
           extseed.[(32 + 1)] <- (W8.of_int j);
         }
         state <@ _shake128_absorb34 (state, extseed);
-        ctr <- (W64.of_int 0);
-        while ((ctr \ult (W64.of_int 256))) {
+        ctr <- 0;
+        while ((ctr < 256)) {
           sctr <- ctr;
           (state, buf) <@ _shake128_squeezeblock (state, buf);
           ctr <- sctr;
