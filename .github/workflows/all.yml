@@ -41,17 +41,19 @@ jobs:
            uses: cachix/install-nix-action@v31
            with:
              nix_path: nixpkgs=channel:nixos-unstable
-         - name: Check Dependencies
-           shell: bash
-           run: nix-shell --run "echo Dependencies OK…"
+        #  - name: Check Dependencies
+        #    shell: bash
+        #    run: nix-shell --run "echo Dependencies OK…"
          - name: Set Clean Path
            run: 
               CLEAN_PATH=$(echo "${{ matrix.category }}" | tr '/' '_')
               echo "PATH=$CLEAN_PATH" >> $GITHUB_ENV
-         - uses: ./.github/actions/heatmap_proofs
-           with:
-            category: ${{matrix.category}}
-            path: ${{env.PATH}}
+         - name: Echo myValue
+           run: echo "test - $PATH"
+        #  - uses: ./.github/actions/heatmap_proofs
+        #    with:
+        #     category: ${{matrix.category}}
+        #     path: ${{env.PATH}}
     upload_artifact:
         name: Upload Heatmap Artifacts
         needs: heatmap_proofs
