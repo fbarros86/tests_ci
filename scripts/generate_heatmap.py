@@ -4,15 +4,9 @@ from typing import List, Dict
 
 
 def time_to_color(time_ratio: float) -> str:
-    
-    r = int(100 + (time_ratio * 155)) 
-    g = int(200 - (time_ratio * 150)) 
-    b = 0
 
-    r = max(0, min(255, r))
-    g = max(0, min(255, g))
-    
-    return f"rgb({r}, {g}, {b})"
+    hue = (1 - time_ratio) * 120 
+    return f"hsl({hue}, 70%, 45%)"
 
 def parse_time_data(time_file_path: str) -> Dict[int, float]:
     line_times = {}

@@ -9,10 +9,7 @@ runs:
         - name: Download all artifacts
           uses: actions/download-artifact@v4
           with:
-            path: artifacts
-        - name: Display structure of downloaded files
-          shell: bash
-          run: ls -R artifacts
+            path: reports
         - name: Build index
           shell: bash
           run: |
@@ -22,9 +19,10 @@ runs:
             echo "<h1>EasyCrypt Proof Heatmaps</h1>" >> $INDEX
             echo "<ul>" >> $INDEX
 
-            for f in artifacts/*/*.html; do
+            for f in reports/*/*.html; do
+              relpath=${f#reports/}
               name=$(basename "$f")
-              echo "<li><a href=\"$name\">$name</a></li>" >> "$INDEX"
+              echo "<li><a href=\"$relpath\">$name</a></li>" >> "$INDEX"
             done
 
             echo "</ul></body></html>" >> $INDEX
