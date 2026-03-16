@@ -47,13 +47,13 @@ jobs:
          - name: Set Clean Path
            run: 
               CLEAN_PATH=$(echo "${{ matrix.category }}" | tr '/' '_')
-              echo "PATH=$CLEAN_PATH" >> $GITHUB_ENV
+              echo "PATH_PROOF=$CLEAN_PATH" >> $GITHUB_ENV
          - name: Echo myValue
-           run: echo "test - $PATH"
+           run: echo "test - $PATH_PROOF"
         #  - uses: ./.github/actions/heatmap_proofs
         #    with:
         #     category: ${{matrix.category}}
-        #     path: ${{env.PATH}}
+        #     path: ${{env.PATH_PROOF}}
     upload_artifact:
         name: Upload Heatmap Artifacts
         needs: heatmap_proofs
