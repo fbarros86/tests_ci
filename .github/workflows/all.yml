@@ -21,17 +21,18 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            size: [ '768' ,'1024' ]
-            dir: [ 'avx2']
-            type: [ 'safety']
-            exclude:
-              - dir: 'ref'
-                type: 'safety'
-              - dir: 'avx2'
-                type: 'correctness'
+            category:
+            # - correctness_768_ref
+            # - correctness_768_avx2
+            # - correctness_1024_ref
+            # - correctness_1024_avx2
+            # - safety_768_avx2
+            - safety_1024_avx2
+            - security
+            - spec
         environment:
           name: github-pages
-          url: easycrypt-heatmap-reports-${{matrix.type}}-${{matrix.size}}-${{matrix.dir}}
+          url: easycrypt-heatmap-reports-${{matrix.category}}
         steps:
          - uses: actions/checkout@v6
            with:
@@ -43,14 +44,18 @@ jobs:
          - name: Check Dependencies
            shell: bash
            run: nix-shell --run "echo Dependencies OK…"
+         - name: Set Clean Path
+           run: 
+              CLEAN_PATH=$(echo "${{ matrix.category }}" | tr '/' '_')
+              echo "PATH=$CLEAN_PATH" >> $GITHUB_ENV
          - uses: ./.github/actions/heatmap_proofs
            with:
-            type: ${{matrix.type}}
-            size: ${{matrix.size}}
-            dir: ${{matrix.dir}}
+            category: ${{matrix.category}}
+            path: ${{env.PATH}}
     upload_artifact:
         name: Upload Heatmap Artifacts
         needs: heatmap_proofs
+        if: always()
         runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v6
