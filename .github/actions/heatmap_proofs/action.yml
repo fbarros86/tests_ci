@@ -42,3 +42,8 @@ runs:
                 python scripts/generate_heatmap.py ${EC_FILE} ${TSTATS_FILE} > ${HTML_REPORT_PATH}                
               fi
            done
+        - name: Upload Heatmap Artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: heatmap-${{inputs.type}}-${{inputs.size}}-${{inputs.dir}}
+            path: reports/*.html

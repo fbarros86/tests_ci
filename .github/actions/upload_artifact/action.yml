@@ -13,18 +13,22 @@ runs:
           run: nix-shell --run "echo Dependencies OK…"
         - name: Setup Pages
           uses: actions/configure-pages@v5
+        - name: Download all artifacts
+          uses: actions/download-artifact@v4
+          with:
+            path: reports
         - name: Build index
           shell: bash
           run: |
+            mkdir -p reports
             INDEX=reports/index.html
-            touch $INDEX
             echo "<html><body>" > $INDEX
             echo "<h1>EasyCrypt Proof Heatmaps</h1>" >> $INDEX
             echo "<ul>" >> $INDEX
 
-            find site -name "*.html" ! -name "index.html" | while read f; do
+            for f in reports/*.html; do
               name=$(basename "$f")
-              echo "<li><a href=\"$name\">$name</a></li>" >> $INDEX
+              echo "<li><a href=\"$name\">$name</a></li>" >> "$INDEX"
             done
 
             echo "</ul></body></html>" >> $INDEX

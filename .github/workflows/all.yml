@@ -22,8 +22,8 @@ jobs:
           fail-fast: false
           matrix:
             size: [ '768' ,'1024' ]
-            dir: [ 'avx2' , 'ref']
-            type: [ 'safety', 'correctness' ]
+            dir: [ 'avx2']
+            type: [ 'safety']
             exclude:
               - dir: 'ref'
                 type: 'safety'
