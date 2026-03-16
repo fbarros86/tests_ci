@@ -16,9 +16,8 @@ runs:
         - name: Build index
           shell: bash
           run: |
-
             INDEX=reports/index.html
-
+            touch $INDEX
             echo "<html><body>" > $INDEX
             echo "<h1>EasyCrypt Proof Heatmaps</h1>" >> $INDEX
             echo "<ul>" >> $INDEX
