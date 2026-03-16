@@ -44,12 +44,12 @@ jobs:
         #  - name: Check Dependencies
         #    shell: bash
         #    run: nix-shell --run "echo Dependencies OK…"
-         - name: Set Clean Path
-           run: 
-              CLEAN_PATH=$(echo "${{ matrix.category }}" | tr '/' '_')
-              echo "PATH_PROOF=$CLEAN_PATH" >> $GITHUB_ENV
+
+         - name: Set env
+           run: echo "PATH_PROOF=$(echo "${{ matrix.category }}" | tr '/' '_')" >> $GITHUB_ENV
          - name: Echo myValue
-           run: echo "test - $PATH_PROOF"
+           run: 
+            echo $PATH_PROOF
         #  - uses: ./.github/actions/heatmap_proofs
         #    with:
         #     category: ${{matrix.category}}
